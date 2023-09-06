@@ -9,6 +9,7 @@ import Xml_changetools
 
 class CarMakerUtils:
     def __init__(self,
+                 cur_dir: str,
                  cmaker_dir: str,
                  new_file_name: str,
                  old_file_name: str,
@@ -30,6 +31,7 @@ class CarMakerUtils:
         :param cmaker_src_dir:不建议更改，CarMaker工程的src路径
         :param xosc_dir:不建议更改，CarMaker工程的Data_osc路径
         """
+        self.cur_dir = cur_dir
         self.cmaker_dir = cmaker_dir
         self.new_file_name = new_file_name
         self.old_file_name = old_file_name
@@ -43,9 +45,9 @@ class CarMakerUtils:
         self.xosc_dir = xosc_dir
         self.new_file_path_and_name = \
             os.path.join(cmaker_dir, xosc_dir, new_file_name + '.xosc')
-        self.vehicle_model_database = "../CarMaker_Vehicle"
-        self.sensor_model_database = "../CarMaker_Sensor"
-        self.src_database = "../CarMaker_Src"
+        self.vehicle_model_database = cur_dir + "\\CarMaker_Vehicle"
+        self.sensor_model_database = cur_dir + "\\CarMaker_Sensor"
+        self.src_database = cur_dir + "\\CarMaker_Src"
         self.package_xosc_dir = None
         self.package_vehicle_dir = None
         self.package_sensor_dir = None
@@ -65,11 +67,17 @@ class CarMakerUtils:
             os.makedirs(self.package_src_dir)
             os.makedirs(self.package_others_dir)
         else:
+            self.package_xosc_dir = os.path.join(self.output_dir, self.xosc_dir)
+            self.package_vehicle_dir = os.path.join(self.output_dir, self.cmaker_data_dir, self.cmaker_vehicle_dir)
+            self.package_sensor_dir = os.path.join(self.output_dir, self.cmaker_data_dir, self.cmaker_sensor_dir)
+            self.package_src_dir = os.path.join(self.output_dir, self.cmaker_src_dir)
+            self.package_others_dir = os.path.join(self.output_dir, "others")
             return
 
     def copy_readme(self):
-        if os.path.exists("../CM_README.txt") and os.path.exists(self.output_dir):
-            copy("../CM_README.txt", os.path.join(self.output_dir, "CM_README.txt"))
+        readme_path = os.path.join(self.cur_dir, "CM_README.txt")
+        if os.path.exists(readme_path) and os.path.exists(self.output_dir):
+            copy(readme_path, os.path.join(self.output_dir, "CM_README.txt"))
         else:
             return
 
@@ -83,8 +91,8 @@ class CarMakerUtils:
         copy(old_osgb_file_path, new_osgb_file_path)
         # 打包xodr与osgb文件
         if os.path.exists(self.output_dir):
-            copy(new_xodr_file_path, os.path.join(self.output_dir, self.xosc_dir, self.old_file_name + '.xodr'))
-            copy(new_osgb_file_path, os.path.join(self.output_dir, self.xosc_dir, self.old_file_name + '.osgb'))
+            copy(new_xodr_file_path, os.path.join(self.output_dir, self.old_file_name + '.xodr'))
+            copy(new_osgb_file_path, os.path.join(self.output_dir, self.old_file_name + '.osgb'))
         else:
             return
 
@@ -135,18 +143,18 @@ class CarMakerUtils:
                                 input_dir=input_file_and_name,
                                 output_dir=new_file_path_and_name,
                                 cmaker_dir=self.cmaker_dir)
-        # 2.FollowTrajectory
-        elif root.find('.//FollowTrajectoryAction') is not None:
-            Xml_change_followtrajectory.main(self.new_file_name, cm_vehicle_model=vehicle_model_name,
-                                             input_dir=input_file_and_name,
-                                             output_dir=new_file_path_and_name,
-                                             cmaker_dir=self.cmaker_dir)
-        # 3.Condition类型为simulationtime condition
+        # 2.Condition类型为simulation_time condition
         else:
             Xml_changetools.main(self.new_file_name, cm_vehicle_model=vehicle_model_name,
                                  input_dir=input_file_and_name,
                                  output_dir=new_file_path_and_name,
                                  cmaker_dir=self.cmaker_dir)
+        # 2.FollowTrajectory
+        if root.find('.//FollowTrajectoryAction') is not None:
+            Xml_change_followtrajectory.main(self.new_file_name, cm_vehicle_model=vehicle_model_name,
+                                             input_dir=new_file_path_and_name,
+                                             output_dir=new_file_path_and_name,
+                                             cmaker_dir=self.cmaker_dir)
 
     def carmaker_process(self, vehicle_model_name, sensor_name=None, src=None):
         self.create_package()

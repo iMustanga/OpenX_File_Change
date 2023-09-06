@@ -1,7 +1,8 @@
+import os
 import subprocess
 import xml.etree.ElementTree as ET
 import sys
-sys.path.append("../CarMaker_PythonAPI/python3.8")
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\CarMaker_PythonAPI\\python3.8")
 # import cmapi
 import pathlib
 def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
