@@ -1,0 +1,2 @@
+/home/mustang/Documents/test/Untitled 1.txt
+/home/mustang/Documents/test/output
