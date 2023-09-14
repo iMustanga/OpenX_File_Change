@@ -1,30 +1,39 @@
-import os
 import subprocess
 import xml.etree.ElementTree as ET
+import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\CarMaker_PythonAPI\\python3.8")
 # import cmapi
 import pathlib
-def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
+import shutil
+def tra(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
 
     xosc_name = file_name+'.xosc'
     # 构建文件路径
-    # file_path = r"C:\IPG\RoadRunner R2022b\Test\Exports\\" + xosc_name
-    # new_file_path = r"C:\CM_Projects\PROJECTNAME\Data_osc\\" + xosc_name
-    file_path = input_dir
+    old_file_path = input_dir
+    file_path = cmaker_dir + "/Data_osc/" + xosc_name
+    if not os.path.exists(file_path):
+        shutil.copy(old_file_path, file_path)
     new_file_path = output_dir
     Trajectory_file = cmaker_dir + "/Data_osc/Catalogs/Trajectory/" + xosc_name
-    testrun_file= cmaker_dir + "/Data/TestRun/" + file_name
+    testrun_file = cmaker_dir + "/Data/TestRun/" + file_name
+
+    old_tree=ET.ElementTree(file=old_file_path)
     tree = ET.ElementTree(file=file_path)
+    old_root=old_tree.getroot()
     root=tree.getroot()
     elements_to_remove = []
     #提取出Trajectory标签中的内容
-    trajectory_content=root.find('.//Trajectory')
+    trajectory_content=old_root.find('.//Trajectory')
     #提取出time=0时的初始位置
     ori_points=None
-    for points in root.findall('.//Vertex'):
-        if float(points.attrib.get('time'))==0:
-            ori_points=points
+    tra_car = None
+    for privatecar in old_root.findall('.//Private'):
+        for points in old_root.findall('.//Vertex'):
+            if float(points.attrib.get('time'))==0:
+                ori_points=points
+                tra_car = privatecar.attrib.get('entityRef')
+    print(tra_car)
     #以下是t=0时的车辆初始位置
     ori_points=ori_points.find('.//WorldPosition')
     x=ori_points.attrib.get('x')
@@ -43,13 +52,17 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
                             </TeleportAction>
                         </PrivateAction>
     """.format(x,y,z,h,p,r)
-    private_position=root.find('.//Private')
-    private_position.insert(-1,ET.fromstring(ori_points_str))
+    private_position=root.findall('.//Private')
+    for abc in private_position:
+        print(abc.attrib)
+        if abc.attrib.get('entityRef')==tra_car:
+            abc.insert(-1,ET.fromstring(ori_points_str))
+            break
 
-    #头文件参数声明文本
+    # 头文件参数声明文本
     ParameterDeclarations="""
         <ParameterDeclarations>
-            <ParameterDeclaration name="owner" parameterType="string" value="Ego" />
+            <ParameterDeclaration name="owner" parameterType="string" value="Ego1" />
         </ParameterDeclarations>
     """
     #先删除掉原有的Para
@@ -70,7 +83,7 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
                 <Directory path="./Catalogs/Pedestrians" />
             </PedestrianCatalog>
             <TrajectoryCatalog>
-                <Directory path="./Catalogs/Trajectory/" />
+                <Directory path="./Catalogs/Trajectory" />
             </TrajectoryCatalog>
             <ControllerCatalog>
                 <Directory path="./Catalogs/Controllers" />
@@ -84,18 +97,26 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     for follow_trajectory_action in root.findall(".//PrivateAction"):
         for trajectory in follow_trajectory_action.findall(".//RoutingAction"):
             follow_trajectory_action.remove(trajectory)
-    print(trajectory_content)
+    # print(trajectory_content)
+
+    Car=[]
+    for Main in old_root.find('.//Storyboard').findall('.//Private'):
+        if Main.find('.//Vertex') is not None:
+            Car.append(Main.attrib.get('entityRef'))
+        # print(Main)
+    #print(Car)
+    car=Car[0]
 
     #需要添加的Act文本
     Act="""
                 <Act name="MyAct">
                     <ManeuverGroup maximumExecutionCount="1" name="MySequence">
                         <Actors selectTriggeringEntities="false">
-                            <EntityRef entityRef="$owner"/>
+                            <EntityRef entityRef="{}"/>
                         </Actors>
-                        <Maneuver name="ManeuverFollowTrajectoryActionEgo_1">
+                        <Maneuver name="ManeuverFollowTrajectoryAction{}_1">
                             <Event maximumExecutionCount="1" name="EventFollowTrajectoryActionEgo_1" priority="overwrite">
-                                <Action name="ActionFollowTrajectoryActionEgo_1">
+                                <Action name="ActionFollowTrajectoryAction{}_1">
                                     <PrivateAction>
                                         <RoutingAction>
                                             <FollowTrajectoryAction>
@@ -103,7 +124,7 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
                                                     <Timing domainAbsoluteRelative="absolute" offset="0.0" scale="1.0" />
                                                 </TimeReference>
                                                 <TrajectoryFollowingMode followingMode="follow" />
-                                                <CatalogReference catalogName="TrajectoryCatalog" entryName="Ego_Trajectory" />
+                                                <CatalogReference catalogName="TrajectoryCatalog" entryName="{}_Trajectory" />
                                             </FollowTrajectoryAction>
                                         </RoutingAction>
                                     </PrivateAction>
@@ -139,11 +160,11 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
                         </ConditionGroup>
                     </StopTrigger>
                 </Act>
-    """
+    """.format(car,car,car,car)
     #先删除掉原有的Act
-    for child in Story:
-        if child.tag=='Act':
-            Story.remove(child)
+    # for child in Story:
+    #     if child.tag=='Act':
+    #         Story.remove(child)
     Story.insert(1,ET.fromstring(Act))
     #修改仿真时间
     Storyboard=root.find('.//Storyboard')
@@ -157,6 +178,19 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     byvaluecondition.append(ET.fromstring(time))
     #写入修改后的新文件
     tree.write(new_file_path)
+#添加头文件描述，这样vscode就可以识别出是xml代码
+    with open(new_file_path, 'r') as file:
+        file_contents = file.read()
+    # 在内容开头插入指定的文本行
+    inserted_line = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    file_contents = inserted_line + file_contents
+
+    # 再次打开文件以写入修改后的内容
+    with open(new_file_path, 'w') as file:
+        file.write(file_contents)
+        file.close()
+
+
 
     #创建Trajectory文件并且写入路径内容
     xml_content="""
@@ -179,7 +213,7 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     #以下为将所有的time标签替换
     # 找到所有<WorldPosition>标签
     world_positions = Trajectory_file_tree.findall(".//WorldPosition")
-    print(len(world_positions))
+    # print(len(world_positions))
     # 计算每两个<WorldPosition>标签之间的距离并相加
     init_speed=float(Storyboard.find('.//AbsoluteTargetSpeed').get('value'))
     total_distance = 0.0
@@ -197,14 +231,14 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
 
         distance = ((curr_x - prev_x)**2 + (curr_y - prev_y)**2 + (curr_z - prev_z)**2)**0.5
         total_distance += distance
-    print("总距离:", total_distance)
-    print("总时间",total_distance/init_speed)
+    # print("总距离:", total_distance)
+    # print("总时间",total_distance/init_speed)
     time_split=total_distance/init_speed/len(world_positions)
-    print('分割的每小段时间为',time_split,'s')
+    # print('分割的每小段时间为',time_split,'s')
     time_array=[]
     for i in range(0,len(world_positions)+1):
         time_array.append(time_split*i)
-    print(time_array)
+    # print(time_array)
     j=0
     for vertex in Trajectory_file_tree.findall('.//Vertex'):
         vertex.set('time',str(time_array[j]))
@@ -212,38 +246,66 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
 
     Trajectory_file_tree.write(Trajectory_file)
 
+    # 添加头文件描述，这样vscode就可以识别出是xml代码
+    with open(Trajectory_file, 'r') as file:
+        file_contents = file.read()
+    # 在内容开头插入指定的文本行
+    inserted_line = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    file_contents = inserted_line + file_contents
+
+    # 再次打开文件以写入修改后的内容
+    with open(Trajectory_file, 'w') as file:
+        file.write(file_contents)
+        file.close()
+
     # 执行命令行操作，就不用另外打开cmd窗口去转化
     cmd_command = cmaker_dir + f'/bin/osc2cm.win64.exe --cmprojpath ../ ' \
-                               f'--oscfname Data_osc/{xosc_name} --validate --egoname Ego ' \
-                               f'--trfname {file_name} --rdfname {file_name}_road ' \
-                               f'--egoinf {cm_vehicle_model} --trfendmode 2 --loglevel 4 ' \
-                               f'--logtofile --logtoconsole --trfmobj --defaultman 1.0 '
+                                   f'--oscfname Data_osc/{xosc_name} --validate --egoname Ego ' \
+                                   f'--trfname {file_name} --rdfname {file_name}_road ' \
+                                   f'--egoinf {cm_vehicle_model} --trfendmode 2 --loglevel 4 ' \
+                                   f'--logtofile --logtoconsole --trfmobj --defaultman 1.0 '
     try:
         subprocess.run(cmd_command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print("命令执行出错：", e)
 
-    # 以下为CarMaker官方定义函数，此处的作用为设置车辆初始速度
+    # 以下作用为修改testrun文件中的Traffic.0.Man.n.LatStep.0.Limit参数，这样有lateral offset动作时直接转换不会报错
+    with open(testrun_file, 'r+') as testrun:
+        testrun_contents = testrun.readlines()
+        for i, line in enumerate(testrun_contents):
+            # 如果找到了目标行
+            if line.startswith("Traffic.") and line.endswith(".Limit =\n"):
+                # 修改该行的内容
+                testrun_contents[i] = line[:-2] + "=t {}\n"
+            # 回到文件开头
+        testrun.seek(0)
+        # 用修改后的内容覆盖原文件
+        testrun.writelines(testrun_contents)
+
+
+    #以下为CarMaker官方定义函数，此处的作用为设置车辆初始速度
+
+#以下为CarMaker官方定义函数，此处的作用为设置车辆初始速度
     async def make_variations():
         project_path = pathlib.Path(cmaker_dir)
         cmapi.Project.load(project_path)
 
         testrun_path = pathlib.Path(testrun_file)
         testrun = cmapi.Project.instance().load_testrun_parametrization(testrun_path)
-        print(testrun.get_path())
+        #print(testrun.get_path())
         # vehicle_path = pathlib.Path("Examples/DemoCar_SensorRadarRSI")
         # vehicle = cmapi.Project.instance().load_vehicle_parametrization(vehicle_path)
 
         # Select vehicle by modifying the Parameter 'Vehicle' of the testrun parametrization object.
         # This Parameter corresponds with the infofile key 'Vehicle' in the testrun infofile.
-        a = testrun.set_parameter_value("DrivMan.Man.0.LongStep.0.Dyn", 'VelControl {} 0.0 1.0 0 1 0'.format(3.6*init_speed))
-        cmapi.Project.write_parametrization(a, testrun)
+        a=testrun.set_parameter_value("DrivMan.Man.0.LongStep.0.Dyn", 'VelControl {} 0.0 1.0 0 1 0'.format(3.6*init_speed))
+
+        cmapi.Project.write_parametrization(a,testrun)
         # Make a variation containing a copy of the testrun
         variation = cmapi.Variation.create_from_testrun(testrun.clone())
         variation.set_name("Variation")
 
         return [variation]
-
     async def main():
         variations = await make_variations()
         # for variation in variations:
@@ -256,4 +318,3 @@ def main(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
         #     cmapi.logger.info("\n".join(param_string))
 
     cmapi.Task.run_main_task(main())
-
