@@ -172,7 +172,6 @@ class CarMakerUtils:
                                  input_dir=input_file_and_name,
                                  output_dir=new_file_path_and_name,
                                  cmaker_dir=self.cmaker_dir)
-            print('Xml_changetools is running')
 
     def carmaker_process(self, vehicle_model_name, sensor_name=None, src=None):
         self.create_package()
