@@ -3,7 +3,7 @@ import xml.etree.ElementTree as ET
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\CarMaker_PythonAPI\\python3.8")
-# import cmapi
+import cmapi
 import pathlib
 import shutil
 def tra(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
