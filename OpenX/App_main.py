@@ -7,6 +7,9 @@ from window import window_main, window_vtd
 import default_file
 import App_vtd
 import App_carmaker
+import win32api
+import win32process
+from threading import Thread
 
 class window_main(QtWidgets.QWidget, Ui_MainWindow):
     soft_path = []
@@ -50,8 +53,7 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
 
     def get_soft_dir(self):
         stri = '\n'
-        fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",
-                                                                   )
+        fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件")
         window_main.soft_path.clear()
         window_main.soft_path.append(fileName)
         # print(soft_path)
@@ -73,7 +75,28 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                                   default_file.DISPLAY_WARN_RELOAD_SOFTWARE)
             else:
-                subprocess.Popen(soft_dir)
+                new_thread = Thread(target=self.thread_open_soft)
+                new_thread.start()
+
+    def thread_open_soft(self):
+        stri = "\n"
+        soft_dir = []
+        file_opensoft = open(default_file.DEFAULT_ROADRUNNER_SOFT_DIR, mode="r")
+        soft_dir.append(file_opensoft.readline())
+        file_opensoft.close()
+        subprocess.Popen(stri.join(soft_dir))
+        # subprocess.Popen(stri.join(soft_dir))
+        # subprocess.getstatusoutput(soft_dir)
+        # subprocess.Popen(stri.join(soft_dir), shell=False, close_fds=True)
+        # subprocess.run(soft_dir)
+        # subprocess.check_call(soft_dir, shell=True)
+        # os.system(r + "'" + stri.join(soft_dir) + "'")
+        # os.execv(soft_dir, ['', '2.txt'])
+        # os.popen(stri.join(soft_dir))
+        # win32api.ShellExecute(0, 'open', stri.join(soft_dir), '', '', 1)
+        # handle = win32process.CreateProcess(soft_dir, '', None, None, 0, win32process.CREATE_NO_WINDOW,
+        #                                    None, None, win32process.STARTUPINFO())
+
 
     # 点击按钮更新案例下载内容
     def case_update(self):
