@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1110, 796)
+        MainWindow.resize(1110, 822)
         MainWindow.setMaximumSize(QtCore.QSize(1666665, 166666))
         self.gridLayout_3 = QtWidgets.QGridLayout(MainWindow)
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -29,14 +29,30 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addWidget(self.case_download_show, 2, 0, 1, 1)
         self.case_down = QtWidgets.QPushButton(MainWindow)
         self.case_down.setMinimumSize(QtCore.QSize(281, 41))
-        self.case_down.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.case_down.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+        "}")
         self.case_down.setObjectName("case_down")
         self.gridLayout_2.addWidget(self.case_down, 0, 0, 1, 1)
         self.report = QtWidgets.QPushButton(MainWindow)
         self.report.setMinimumSize(QtCore.QSize(281, 41))
-        self.report.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.report.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+        "}")
         self.report.setObjectName("report")
         self.gridLayout_2.addWidget(self.report, 0, 2, 1, 1)
         self.range_show = QtWidgets.QListWidget(MainWindow)
@@ -51,8 +67,16 @@ class Ui_MainWindow(object):
         self.gridLayout_2.addItem(spacerItem3, 0, 3, 1, 1)
         self.range = QtWidgets.QPushButton(MainWindow)
         self.range.setMinimumSize(QtCore.QSize(281, 41))
-        self.range.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.range.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+        "}")
         self.range.setObjectName("range")
         self.gridLayout_2.addWidget(self.range, 0, 4, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout_2, 6, 2, 1, 1)
@@ -68,7 +92,7 @@ class Ui_MainWindow(object):
         self.frame_3.setMinimumSize(QtCore.QSize(341, 211))
         self.frame_3.setMaximumSize(QtCore.QSize(341, 211))
         self.frame_3.setStyleSheet("border-image: url(:/DSXW/DSXW.png);\n"
-"border-image: url(:/DSXW/DSXW.png);")
+        "border-image: url(:/DSXW/DSXW.png);")
         self.frame_3.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_3.setObjectName("frame_3")
@@ -80,19 +104,31 @@ class Ui_MainWindow(object):
         self.select_software_dir = QtWidgets.QPushButton(MainWindow)
         self.select_software_dir.setMinimumSize(QtCore.QSize(241, 41))
         self.select_software_dir.setMaximumSize(QtCore.QSize(16777215, 41))
-        self.select_software_dir.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(255, 199, 125);\n"
-"border-radius:10px\n"
-"")
+        self.select_software_dir.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(255, 199, 125);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(193, 125, 17);\n"
+        "border-radius:10px;\n"
+        "}")
         self.select_software_dir.setObjectName("select_software_dir")
         self.verticalLayout_2.addWidget(self.select_software_dir)
         self.open_software = QtWidgets.QPushButton(MainWindow)
         self.open_software.setMinimumSize(QtCore.QSize(241, 41))
-        self.open_software.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(255, 199, 125);\n"
-"border-radius:10px\n"
-"\n"
-"")
+        self.open_software.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(255, 199, 125);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(193, 125, 17);\n"
+        "border-radius:10px;\n"
+        "}\n"
+        "")
         self.open_software.setObjectName("open_software")
         self.verticalLayout_2.addWidget(self.open_software)
         self.horizontalLayout_4.addLayout(self.verticalLayout_2)
@@ -120,30 +156,50 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addItem(spacerItem14)
         self.openx_vtd_change = QtWidgets.QPushButton(MainWindow)
         self.openx_vtd_change.setMinimumSize(QtCore.QSize(251, 41))
-        self.openx_vtd_change.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(190, 221, 255);\n"
-"border-radius:10px\n"
-"")
+        self.openx_vtd_change.setStyleSheet("QPushButton{\n"
+    "border:2px solid rgb(85, 87, 83);\n"
+    "background-color: rgb(190, 221, 255);\n"
+    "border-radius:10px\n"
+    "}\n"
+    "QPushButton:pressed{\n"
+    "border:2px solid rgb(85, 87, 83);\n"
+    "background-color: rgb(138, 164, 193);\n"
+    "border-radius:10px;\n"
+    "}")
+        self.openx_vtd_change.setDefault(False)
+        self.openx_vtd_change.setFlat(False)
         self.openx_vtd_change.setObjectName("openx_vtd_change")
         self.horizontalLayout_3.addWidget(self.openx_vtd_change)
         spacerItem15 = QtWidgets.QSpacerItem(88, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem15)
         self.openx_carmaker_change = QtWidgets.QPushButton(MainWindow)
         self.openx_carmaker_change.setMinimumSize(QtCore.QSize(251, 41))
-        self.openx_carmaker_change.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(190, 221, 255);\n"
-"border-radius:10px\n"
-"")
+        self.openx_carmaker_change.setStyleSheet("QPushButton{\n"
+    "border:2px solid rgb(85, 87, 83);\n"
+    "background-color: rgb(190, 221, 255);\n"
+    "border-radius:10px\n"
+    "}\n"
+    "QPushButton:pressed{\n"
+    "border:2px solid rgb(85, 87, 83);\n"
+    "background-color: rgb(138, 164, 193);\n"
+    "border-radius:10px;\n"
+    "}")
         self.openx_carmaker_change.setObjectName("openx_carmaker_change")
         self.horizontalLayout_3.addWidget(self.openx_carmaker_change)
         spacerItem16 = QtWidgets.QSpacerItem(98, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem16)
         self.openx_prescan_change = QtWidgets.QPushButton(MainWindow)
         self.openx_prescan_change.setMinimumSize(QtCore.QSize(251, 41))
-        self.openx_prescan_change.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(190, 221, 255);\n"
-"border-radius:10px\n"
-"")
+        self.openx_prescan_change.setStyleSheet("QPushButton{\n"
+    "border:2px solid rgb(85, 87, 83);\n"
+    "background-color: rgb(190, 221, 255);\n"
+    "border-radius:10px\n"
+    "}\n"
+    "QPushButton:pressed{\n"
+    "border:2px solid rgb(85, 87, 83);\n"
+    "background-color: rgb(138, 164, 193);\n"
+    "border-radius:10px;\n"
+    "}")
         self.openx_prescan_change.setObjectName("openx_prescan_change")
         self.horizontalLayout_3.addWidget(self.openx_prescan_change)
         spacerItem17 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -169,5 +225,6 @@ class Ui_MainWindow(object):
         self.open_software.setText(_translate("MainWindow", "打开Roadrunner软件"))
         self.openx_vtd_change.setText(_translate("MainWindow", "OpenX-VTD格式转换"))
         self.openx_carmaker_change.setText(_translate("MainWindow", "OpenX-CarMaker格式转换"))
+        self.openx_prescan_change.setToolTip(_translate("MainWindow", "<html><head/><body><p><br/></p></body></html>"))
         self.openx_prescan_change.setText(_translate("MainWindow", "OpenX-Prescan格式转换"))
 from window import DSXW_rc

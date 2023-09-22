@@ -38,7 +38,7 @@ class Ui_Window_vtd(object):
         font.setPointSize(16)
         self.vtd_vehicle_model_select_2.setFont(font)
         self.vtd_vehicle_model_select_2.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_2.setObjectName("vtd_vehicle_model_select_2")
         self.horizontalLayout_6.addWidget(self.vtd_vehicle_model_select_2)
         spacerItem5 = QtWidgets.QSpacerItem(368, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -56,7 +56,7 @@ class Ui_Window_vtd(object):
         self.blank_8.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_8.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_8.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_8.setText("")
         self.blank_8.setObjectName("blank_8")
         self.horizontalLayout_8.addWidget(self.blank_8)
@@ -66,14 +66,14 @@ class Ui_Window_vtd(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_3.setFont(font)
         self.vtd_vehicle_model_select_3.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_3.setObjectName("vtd_vehicle_model_select_3")
         self.horizontalLayout_8.addWidget(self.vtd_vehicle_model_select_3)
         self.blank_7 = QtWidgets.QPushButton(Window_vtd)
         self.blank_7.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_7.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_7.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_7.setText("")
         self.blank_7.setObjectName("blank_7")
         self.horizontalLayout_8.addWidget(self.blank_7)
@@ -82,9 +82,16 @@ class Ui_Window_vtd(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.vtd_input = QtWidgets.QPushButton(Window_vtd)
         self.vtd_input.setMinimumSize(QtCore.QSize(271, 41))
-        self.vtd_input.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(186, 189, 182);\n"
-"border-radius:10px")
+        self.vtd_input.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(186, 189, 182);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(92, 105, 107);\n"
+        "border-radius:10px;\n"
+        "}")
         self.vtd_input.setObjectName("vtd_input")
         self.horizontalLayout.addWidget(self.vtd_input)
         spacerItem8 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -92,7 +99,7 @@ class Ui_Window_vtd(object):
         self.vtd_show_input = QtWidgets.QLineEdit(Window_vtd)
         self.vtd_show_input.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_show_input.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_show_input.setText("")
         self.vtd_show_input.setObjectName("vtd_show_input")
         self.horizontalLayout.addWidget(self.vtd_show_input)
@@ -107,7 +114,7 @@ class Ui_Window_vtd(object):
         self.blank_14.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_14.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_14.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_14.setText("")
         self.blank_14.setObjectName("blank_14")
         self.horizontalLayout_9.addWidget(self.blank_14)
@@ -117,14 +124,14 @@ class Ui_Window_vtd(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_4.setFont(font)
         self.vtd_vehicle_model_select_4.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_4.setObjectName("vtd_vehicle_model_select_4")
         self.horizontalLayout_9.addWidget(self.vtd_vehicle_model_select_4)
         self.blank_13 = QtWidgets.QPushButton(Window_vtd)
         self.blank_13.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_13.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_13.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_13.setText("")
         self.blank_13.setObjectName("blank_13")
         self.horizontalLayout_9.addWidget(self.blank_13)
@@ -133,8 +140,16 @@ class Ui_Window_vtd(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.vtd_vehicle_model_select = QtWidgets.QPushButton(Window_vtd)
         self.vtd_vehicle_model_select.setMinimumSize(QtCore.QSize(271, 41))
-        self.vtd_vehicle_model_select.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.vtd_vehicle_model_select.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+        "}")
         self.vtd_vehicle_model_select.setObjectName("vtd_vehicle_model_select")
         self.horizontalLayout_2.addWidget(self.vtd_vehicle_model_select)
         spacerItem11 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -147,7 +162,7 @@ class Ui_Window_vtd(object):
         self.vtd_vehicle_model_show.setSizePolicy(sizePolicy)
         self.vtd_vehicle_model_show.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_vehicle_model_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_show.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContentsOnFirstShow)
         self.vtd_vehicle_model_show.setObjectName("vtd_vehicle_model_show")
         self.horizontalLayout_2.addWidget(self.vtd_vehicle_model_show)
@@ -162,7 +177,7 @@ class Ui_Window_vtd(object):
         self.blank_18.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_18.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_18.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_18.setText("")
         self.blank_18.setObjectName("blank_18")
         self.horizontalLayout_10.addWidget(self.blank_18)
@@ -172,14 +187,14 @@ class Ui_Window_vtd(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_5.setFont(font)
         self.vtd_vehicle_model_select_5.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_5.setObjectName("vtd_vehicle_model_select_5")
         self.horizontalLayout_10.addWidget(self.vtd_vehicle_model_select_5)
         self.blank_17 = QtWidgets.QPushButton(Window_vtd)
         self.blank_17.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_17.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_17.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_17.setText("")
         self.blank_17.setObjectName("blank_17")
         self.horizontalLayout_10.addWidget(self.blank_17)
@@ -188,8 +203,16 @@ class Ui_Window_vtd(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.vtd_sensor_select = QtWidgets.QPushButton(Window_vtd)
         self.vtd_sensor_select.setMinimumSize(QtCore.QSize(271, 41))
-        self.vtd_sensor_select.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.vtd_sensor_select.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+        "}")
         self.vtd_sensor_select.setObjectName("vtd_sensor_select")
         self.horizontalLayout_3.addWidget(self.vtd_sensor_select)
         spacerItem14 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -202,7 +225,7 @@ class Ui_Window_vtd(object):
         self.vtd_sensor_show.setSizePolicy(sizePolicy)
         self.vtd_sensor_show.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_sensor_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_sensor_show.setObjectName("vtd_sensor_show")
         self.horizontalLayout_3.addWidget(self.vtd_sensor_show)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
@@ -216,7 +239,7 @@ class Ui_Window_vtd(object):
         self.blank_19.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_19.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_19.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_19.setText("")
         self.blank_19.setObjectName("blank_19")
         self.horizontalLayout_11.addWidget(self.blank_19)
@@ -226,14 +249,14 @@ class Ui_Window_vtd(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_6.setFont(font)
         self.vtd_vehicle_model_select_6.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_6.setObjectName("vtd_vehicle_model_select_6")
         self.horizontalLayout_11.addWidget(self.vtd_vehicle_model_select_6)
         self.blank_21 = QtWidgets.QPushButton(Window_vtd)
         self.blank_21.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_21.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_21.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_21.setText("")
         self.blank_21.setObjectName("blank_21")
         self.horizontalLayout_11.addWidget(self.blank_21)
@@ -242,9 +265,16 @@ class Ui_Window_vtd(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.vtd_select_output = QtWidgets.QPushButton(Window_vtd)
         self.vtd_select_output.setMinimumSize(QtCore.QSize(271, 41))
-        self.vtd_select_output.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(186, 189, 182);\n"
-"border-radius:10px")
+        self.vtd_select_output.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(186, 189, 182);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(92, 105, 107);\n"
+        "border-radius:10px;\n"
+        "}")
         self.vtd_select_output.setObjectName("vtd_select_output")
         self.horizontalLayout_4.addWidget(self.vtd_select_output)
         spacerItem17 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -252,7 +282,7 @@ class Ui_Window_vtd(object):
         self.vtd_show_output = QtWidgets.QLineEdit(Window_vtd)
         self.vtd_show_output.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_show_output.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_show_output.setText("")
         self.vtd_show_output.setObjectName("vtd_show_output")
         self.horizontalLayout_4.addWidget(self.vtd_show_output)
@@ -267,10 +297,16 @@ class Ui_Window_vtd(object):
         self.horizontalLayout_5.addItem(spacerItem20)
         self.to_vtd = QtWidgets.QPushButton(Window_vtd)
         self.to_vtd.setMinimumSize(QtCore.QSize(291, 41))
-        self.to_vtd.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(190, 221, 255);\n"
-"border-radius:10px\n"
-"")
+        self.to_vtd.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(190, 221, 255);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(138, 164, 193);\n"
+        "border-radius:10px;\n"
+        "}")
         self.to_vtd.setObjectName("to_vtd")
         self.horizontalLayout_5.addWidget(self.to_vtd)
         spacerItem21 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

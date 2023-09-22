@@ -24,7 +24,7 @@ class Ui_window_carmaker(object):
         self.blank_7.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_7.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_7.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_7.setText("")
         self.blank_7.setObjectName("blank_7")
         self.horizontalLayout_6.addWidget(self.blank_7)
@@ -34,14 +34,14 @@ class Ui_window_carmaker(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_3.setFont(font)
         self.vtd_vehicle_model_select_3.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_3.setObjectName("vtd_vehicle_model_select_3")
         self.horizontalLayout_6.addWidget(self.vtd_vehicle_model_select_3)
         self.blank_8 = QtWidgets.QPushButton(window_carmaker)
         self.blank_8.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_8.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_8.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_8.setText("")
         self.blank_8.setObjectName("blank_8")
         self.horizontalLayout_6.addWidget(self.blank_8)
@@ -52,7 +52,7 @@ class Ui_window_carmaker(object):
         self.blank_9.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_9.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_9.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_9.setText("")
         self.blank_9.setObjectName("blank_9")
         self.horizontalLayout_7.addWidget(self.blank_9)
@@ -62,14 +62,14 @@ class Ui_window_carmaker(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_4.setFont(font)
         self.vtd_vehicle_model_select_4.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_4.setObjectName("vtd_vehicle_model_select_4")
         self.horizontalLayout_7.addWidget(self.vtd_vehicle_model_select_4)
         self.blank_10 = QtWidgets.QPushButton(window_carmaker)
         self.blank_10.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_10.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_10.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_10.setText("")
         self.blank_10.setObjectName("blank_10")
         self.horizontalLayout_7.addWidget(self.blank_10)
@@ -80,8 +80,16 @@ class Ui_window_carmaker(object):
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.carmaker_vehicle_model_select = QtWidgets.QPushButton(window_carmaker)
         self.carmaker_vehicle_model_select.setMinimumSize(QtCore.QSize(271, 41))
-        self.carmaker_vehicle_model_select.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.carmaker_vehicle_model_select.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+                                                         "}")
         self.carmaker_vehicle_model_select.setObjectName("carmaker_vehicle_model_select")
         self.horizontalLayout_2.addWidget(self.carmaker_vehicle_model_select)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -94,7 +102,7 @@ class Ui_window_carmaker(object):
         self.carmaker_vehicle_model_show.setSizePolicy(sizePolicy)
         self.carmaker_vehicle_model_show.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_vehicle_model_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.carmaker_vehicle_model_show.setObjectName("carmaker_vehicle_model_show")
         self.horizontalLayout_2.addWidget(self.carmaker_vehicle_model_show)
         self.gridLayout.addLayout(self.horizontalLayout_2, 9, 3, 1, 1)
@@ -120,7 +128,7 @@ class Ui_window_carmaker(object):
         font.setPointSize(16)
         self.vtd_vehicle_model_select_2.setFont(font)
         self.vtd_vehicle_model_select_2.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_2.setObjectName("vtd_vehicle_model_select_2")
         self.horizontalLayout_5.addWidget(self.vtd_vehicle_model_select_2)
         spacerItem10 = QtWidgets.QSpacerItem(358, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -135,7 +143,7 @@ class Ui_window_carmaker(object):
         self.blank_12.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_12.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_12.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_12.setText("")
         self.blank_12.setObjectName("blank_12")
         self.horizontalLayout_8.addWidget(self.blank_12)
@@ -145,14 +153,14 @@ class Ui_window_carmaker(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_5.setFont(font)
         self.vtd_vehicle_model_select_5.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_5.setObjectName("vtd_vehicle_model_select_5")
         self.horizontalLayout_8.addWidget(self.vtd_vehicle_model_select_5)
         self.blank_11 = QtWidgets.QPushButton(window_carmaker)
         self.blank_11.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_11.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_11.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_11.setText("")
         self.blank_11.setObjectName("blank_11")
         self.horizontalLayout_8.addWidget(self.blank_11)
@@ -173,9 +181,16 @@ class Ui_window_carmaker(object):
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.carmaker_select_output = QtWidgets.QPushButton(window_carmaker)
         self.carmaker_select_output.setMinimumSize(QtCore.QSize(271, 41))
-        self.carmaker_select_output.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(186, 189, 182);\n"
-"border-radius:10px")
+        self.carmaker_select_output.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(186, 189, 182);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(92, 105, 107);\n"
+        "border-radius:10px;\n"
+        "}")
         self.carmaker_select_output.setObjectName("carmaker_select_output")
         self.horizontalLayout_4.addWidget(self.carmaker_select_output)
         spacerItem17 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -183,7 +198,7 @@ class Ui_window_carmaker(object):
         self.carmaker_show_output = QtWidgets.QLineEdit(window_carmaker)
         self.carmaker_show_output.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_show_output.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.carmaker_show_output.setText("")
         self.carmaker_show_output.setObjectName("carmaker_show_output")
         self.horizontalLayout_4.addWidget(self.carmaker_show_output)
@@ -196,8 +211,16 @@ class Ui_window_carmaker(object):
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.carmaker_sensor_select = QtWidgets.QPushButton(window_carmaker)
         self.carmaker_sensor_select.setMinimumSize(QtCore.QSize(271, 41))
-        self.carmaker_sensor_select.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        self.carmaker_sensor_select.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(250,250,250);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(211, 215, 207);\n"
+        "border-radius:10px;\n"
+        "}")
         self.carmaker_sensor_select.setObjectName("carmaker_sensor_select")
         self.horizontalLayout_3.addWidget(self.carmaker_sensor_select)
         spacerItem20 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -210,7 +233,7 @@ class Ui_window_carmaker(object):
         self.carmaker_sensor_show.setSizePolicy(sizePolicy)
         self.carmaker_sensor_show.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_sensor_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.carmaker_sensor_show.setObjectName("carmaker_sensor_show")
         self.horizontalLayout_3.addWidget(self.carmaker_sensor_show)
         self.gridLayout.addLayout(self.horizontalLayout_3, 13, 3, 1, 1)
@@ -220,7 +243,7 @@ class Ui_window_carmaker(object):
         self.blank_13.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_13.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_13.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_13.setText("")
         self.blank_13.setObjectName("blank_13")
         self.horizontalLayout_9.addWidget(self.blank_13)
@@ -230,14 +253,14 @@ class Ui_window_carmaker(object):
         font.setPointSize(14)
         self.vtd_vehicle_model_select_6.setFont(font)
         self.vtd_vehicle_model_select_6.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.vtd_vehicle_model_select_6.setObjectName("vtd_vehicle_model_select_6")
         self.horizontalLayout_9.addWidget(self.vtd_vehicle_model_select_6)
         self.blank_14 = QtWidgets.QPushButton(window_carmaker)
         self.blank_14.setMinimumSize(QtCore.QSize(330, 6))
         self.blank_14.setMaximumSize(QtCore.QSize(16777215, 6))
         self.blank_14.setStyleSheet("border:5px solid rgb(186,186,186);\n"
-"border-radius:25px")
+        "border-radius:25px")
         self.blank_14.setText("")
         self.blank_14.setObjectName("blank_14")
         self.horizontalLayout_9.addWidget(self.blank_14)
@@ -252,10 +275,16 @@ class Ui_window_carmaker(object):
         self.horizontalLayout_10.addItem(spacerItem23)
         self.to_carmaker = QtWidgets.QPushButton(window_carmaker)
         self.to_carmaker.setMinimumSize(QtCore.QSize(291, 41))
-        self.to_carmaker.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(190, 221, 255);\n"
-"border-radius:10px\n"
-"")
+        self.to_carmaker.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(190, 221, 255);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(138, 164, 193);\n"
+        "border-radius:10px;\n"
+        "}")
         self.to_carmaker.setObjectName("to_carmaker")
         self.horizontalLayout_10.addWidget(self.to_carmaker)
         spacerItem24 = QtWidgets.QSpacerItem(68, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -265,9 +294,16 @@ class Ui_window_carmaker(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.carmaker_select_input = QtWidgets.QPushButton(window_carmaker)
         self.carmaker_select_input.setMinimumSize(QtCore.QSize(271, 41))
-        self.carmaker_select_input.setStyleSheet("border:2px solid rgb(85, 87, 83);\n"
-"background-color: rgb(186, 189, 182);\n"
-"border-radius:10px")
+        self.carmaker_select_input.setStyleSheet("QPushButton{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(186, 189, 182);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(92, 105, 107);\n"
+        "border-radius:10px;\n"
+        "}")
         self.carmaker_select_input.setObjectName("carmaker_select_input")
         self.horizontalLayout.addWidget(self.carmaker_select_input)
         spacerItem25 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -275,7 +311,7 @@ class Ui_window_carmaker(object):
         self.carmaker_show_input = QtWidgets.QLineEdit(window_carmaker)
         self.carmaker_show_input.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_show_input.setStyleSheet("border:2px solid rgb(186,186,186);\n"
-"border-radius:10px")
+        "border-radius:10px")
         self.carmaker_show_input.setText("")
         self.carmaker_show_input.setObjectName("carmaker_show_input")
         self.horizontalLayout.addWidget(self.carmaker_show_input)
