@@ -34,8 +34,12 @@ class Ui_MainWindow(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
         "}")
@@ -48,8 +52,12 @@ class Ui_MainWindow(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
         "}")
@@ -72,8 +80,12 @@ class Ui_MainWindow(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
         "}")
@@ -109,11 +121,17 @@ class Ui_MainWindow(object):
         "background-color: rgb(255, 199, 125);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(230, 175, 80);\n"
+        "border-radius:10px;\n"
+        "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(193, 125, 17);\n"
         "border-radius:10px;\n"
-        "}")
+        "}\n"
+        "")
         self.select_software_dir.setObjectName("select_software_dir")
         self.verticalLayout_2.addWidget(self.select_software_dir)
         self.open_software = QtWidgets.QPushButton(MainWindow)
@@ -122,6 +140,11 @@ class Ui_MainWindow(object):
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(255, 199, 125);\n"
         "border-radius:10px\n"
+        "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(230, 175, 80);\n"
+        "border-radius:10px;\n"
         "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
@@ -157,15 +180,20 @@ class Ui_MainWindow(object):
         self.openx_vtd_change = QtWidgets.QPushButton(MainWindow)
         self.openx_vtd_change.setMinimumSize(QtCore.QSize(251, 41))
         self.openx_vtd_change.setStyleSheet("QPushButton{\n"
-    "border:2px solid rgb(85, 87, 83);\n"
-    "background-color: rgb(190, 221, 255);\n"
-    "border-radius:10px\n"
-    "}\n"
-    "QPushButton:pressed{\n"
-    "border:2px solid rgb(85, 87, 83);\n"
-    "background-color: rgb(138, 164, 193);\n"
-    "border-radius:10px;\n"
-    "}")
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(190, 221, 255);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(170, 200, 230);\n"
+        "border-radius:10px;\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(138, 164, 193);\n"
+        "border-radius:10px;\n"
+        "}")
         self.openx_vtd_change.setDefault(False)
         self.openx_vtd_change.setFlat(False)
         self.openx_vtd_change.setObjectName("openx_vtd_change")
@@ -175,15 +203,20 @@ class Ui_MainWindow(object):
         self.openx_carmaker_change = QtWidgets.QPushButton(MainWindow)
         self.openx_carmaker_change.setMinimumSize(QtCore.QSize(251, 41))
         self.openx_carmaker_change.setStyleSheet("QPushButton{\n"
-    "border:2px solid rgb(85, 87, 83);\n"
-    "background-color: rgb(190, 221, 255);\n"
-    "border-radius:10px\n"
-    "}\n"
-    "QPushButton:pressed{\n"
-    "border:2px solid rgb(85, 87, 83);\n"
-    "background-color: rgb(138, 164, 193);\n"
-    "border-radius:10px;\n"
-    "}")
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(190, 221, 255);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(170, 200, 230);\n"
+        "border-radius:10px;\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(138, 164, 193);\n"
+        "border-radius:10px;\n"
+        "}")
         self.openx_carmaker_change.setObjectName("openx_carmaker_change")
         self.horizontalLayout_3.addWidget(self.openx_carmaker_change)
         spacerItem16 = QtWidgets.QSpacerItem(98, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -191,15 +224,20 @@ class Ui_MainWindow(object):
         self.openx_prescan_change = QtWidgets.QPushButton(MainWindow)
         self.openx_prescan_change.setMinimumSize(QtCore.QSize(251, 41))
         self.openx_prescan_change.setStyleSheet("QPushButton{\n"
-    "border:2px solid rgb(85, 87, 83);\n"
-    "background-color: rgb(190, 221, 255);\n"
-    "border-radius:10px\n"
-    "}\n"
-    "QPushButton:pressed{\n"
-    "border:2px solid rgb(85, 87, 83);\n"
-    "background-color: rgb(138, 164, 193);\n"
-    "border-radius:10px;\n"
-    "}")
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(190, 221, 255);\n"
+        "border-radius:10px\n"
+        "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(170, 200, 230);\n"
+        "border-radius:10px;\n"
+        "}\n"
+        "QPushButton:pressed{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(138, 164, 193);\n"
+        "border-radius:10px;\n"
+        "}")
         self.openx_prescan_change.setObjectName("openx_prescan_change")
         self.horizontalLayout_3.addWidget(self.openx_prescan_change)
         spacerItem17 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

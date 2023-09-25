@@ -87,6 +87,11 @@ class Ui_Window_vtd(object):
         "background-color: rgb(186, 189, 182);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(175, 175, 175);\n"
+        "border-radius:10px;\n"
+        "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(92, 105, 107);\n"
@@ -99,6 +104,7 @@ class Ui_Window_vtd(object):
         self.vtd_show_input = QtWidgets.QLineEdit(Window_vtd)
         self.vtd_show_input.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_show_input.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.vtd_show_input.setText("")
         self.vtd_show_input.setObjectName("vtd_show_input")
@@ -145,8 +151,12 @@ class Ui_Window_vtd(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
         "}")
@@ -162,6 +172,7 @@ class Ui_Window_vtd(object):
         self.vtd_vehicle_model_show.setSizePolicy(sizePolicy)
         self.vtd_vehicle_model_show.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_vehicle_model_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.vtd_vehicle_model_show.setSizeAdjustPolicy(QtWidgets.QComboBox.AdjustToContentsOnFirstShow)
         self.vtd_vehicle_model_show.setObjectName("vtd_vehicle_model_show")
@@ -208,8 +219,12 @@ class Ui_Window_vtd(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
         "}")
@@ -225,6 +240,7 @@ class Ui_Window_vtd(object):
         self.vtd_sensor_show.setSizePolicy(sizePolicy)
         self.vtd_sensor_show.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_sensor_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.vtd_sensor_show.setObjectName("vtd_sensor_show")
         self.horizontalLayout_3.addWidget(self.vtd_sensor_show)
@@ -270,6 +286,11 @@ class Ui_Window_vtd(object):
         "background-color: rgb(186, 189, 182);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(175, 175, 175);\n"
+        "border-radius:10px;\n"
+        "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(92, 105, 107);\n"
@@ -282,6 +303,7 @@ class Ui_Window_vtd(object):
         self.vtd_show_output = QtWidgets.QLineEdit(Window_vtd)
         self.vtd_show_output.setMinimumSize(QtCore.QSize(541, 41))
         self.vtd_show_output.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.vtd_show_output.setText("")
         self.vtd_show_output.setObjectName("vtd_show_output")
@@ -301,6 +323,11 @@ class Ui_Window_vtd(object):
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(190, 221, 255);\n"
         "border-radius:10px\n"
+        "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(170, 200, 230);\n"
+        "border-radius:10px;\n"
         "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
@@ -340,4 +367,4 @@ class Ui_Window_vtd(object):
         self.vtd_vehicle_model_select_6.setText(_translate("Window_vtd", "4.选择输出目录"))
         self.vtd_select_output.setText(_translate("Window_vtd", "选择打包后输出目录"))
         self.to_vtd.setText(_translate("Window_vtd", "转换为VTD格式（Linux）"))
-from window import DSXW_rc
+

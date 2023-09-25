@@ -85,11 +85,15 @@ class Ui_window_carmaker(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
-                                                         "}")
+        "}")
         self.carmaker_vehicle_model_select.setObjectName("carmaker_vehicle_model_select")
         self.horizontalLayout_2.addWidget(self.carmaker_vehicle_model_select)
         spacerItem2 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
@@ -102,6 +106,7 @@ class Ui_window_carmaker(object):
         self.carmaker_vehicle_model_show.setSizePolicy(sizePolicy)
         self.carmaker_vehicle_model_show.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_vehicle_model_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.carmaker_vehicle_model_show.setObjectName("carmaker_vehicle_model_show")
         self.horizontalLayout_2.addWidget(self.carmaker_vehicle_model_show)
@@ -186,6 +191,11 @@ class Ui_window_carmaker(object):
         "background-color: rgb(186, 189, 182);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(175, 175, 175);\n"
+        "border-radius:10px;\n"
+        "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(92, 105, 107);\n"
@@ -198,6 +208,7 @@ class Ui_window_carmaker(object):
         self.carmaker_show_output = QtWidgets.QLineEdit(window_carmaker)
         self.carmaker_show_output.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_show_output.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.carmaker_show_output.setText("")
         self.carmaker_show_output.setObjectName("carmaker_show_output")
@@ -216,8 +227,12 @@ class Ui_window_carmaker(object):
         "background-color: rgb(250,250,250);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(240, 240, 240);\n"
+        "border-radius:10px;}\n"
         "QPushButton:pressed{\n"
-        "border:2px solid rgb(85, 87, 83);\n"
+        "border:2px solid rgb(186,186,186);\n"
         "background-color: rgb(211, 215, 207);\n"
         "border-radius:10px;\n"
         "}")
@@ -233,6 +248,7 @@ class Ui_window_carmaker(object):
         self.carmaker_sensor_show.setSizePolicy(sizePolicy)
         self.carmaker_sensor_show.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_sensor_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.carmaker_sensor_show.setObjectName("carmaker_sensor_show")
         self.horizontalLayout_3.addWidget(self.carmaker_sensor_show)
@@ -280,6 +296,11 @@ class Ui_window_carmaker(object):
         "background-color: rgb(190, 221, 255);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(170, 200, 230);\n"
+        "border-radius:10px;\n"
+        "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(138, 164, 193);\n"
@@ -299,6 +320,11 @@ class Ui_window_carmaker(object):
         "background-color: rgb(186, 189, 182);\n"
         "border-radius:10px\n"
         "}\n"
+        "QPushButton:hover{\n"
+        "border:2px solid rgb(85, 87, 83);\n"
+        "background-color: rgb(175, 175, 175);\n"
+        "border-radius:10px;\n"
+        "}\n"
         "QPushButton:pressed{\n"
         "border:2px solid rgb(85, 87, 83);\n"
         "background-color: rgb(92, 105, 107);\n"
@@ -311,6 +337,7 @@ class Ui_window_carmaker(object):
         self.carmaker_show_input = QtWidgets.QLineEdit(window_carmaker)
         self.carmaker_show_input.setMinimumSize(QtCore.QSize(541, 41))
         self.carmaker_show_input.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        "background-color: rgb(255, 255, 255);\n"
         "border-radius:10px")
         self.carmaker_show_input.setText("")
         self.carmaker_show_input.setObjectName("carmaker_show_input")
