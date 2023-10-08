@@ -15,11 +15,14 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
     vtd_inputs = []
     vtd_outputs = []
+    vtd_input_dir = []
     vtd_name = []
     vtd_outdir = []
     vtd_outdir_openx = []
     vtd_outdir_vehicle = []
     vtd_outdir_others = []
+    veh_model_name = []
+    sensor_model_name = []
     # 程序所支持的车辆/动作数量
     vtd_act_support = 100
     vtd_time_arr = np.zeros((vtd_act_support, vtd_act_support))
@@ -35,7 +38,8 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         # 设置各个按钮功能
         self.vtd_input.clicked.connect(self.vtd_input_file)
         self.vtd_select_output.clicked.connect(self.vtd_output_file)
-        self.to_vtd.clicked.connect(self.vtd_openx_change)
+        # self.to_vtd.clicked.connect(self.vtd_openx_change)
+        self.to_vtd.clicked.connect(self.vtd_ergodic)
         self.vtd_vehicle_model_select.clicked.connect(self.vehicle_update)
         self.vtd_sensor_select.clicked.connect(self.sensor_update)
 
@@ -49,49 +53,61 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         vtd_sensor = os.listdir(default_file.DEFAULT_VTD_SENSOR_DIR)
         self.vtd_sensor_show.addItems(vtd_sensor)
 
+    def vtd_ergodic(self):
+        stri = '\n'
+        # print(vtd_change.vtd_inputs)
+        vtd_dir = os.listdir(stri.join(vtd_change.vtd_inputs) + '/')
+        for name in vtd_dir:
+            vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs) + '/' + name
+            portion = os.path.splitext(name)
+            vtd_change.vtd_name = portion[0]
+            # print(vtd_change.vtd_name)
+            self.vtd_openx_change()
+
+
+
     # xosc文件修改主函数
     def vtd_openx_change(self):
-
+        # print(vtd_change.vtd_name)
         # 获取所需要的各种路径及文件名
         self.get_vtd_dir()
         stri = '\n'
 
         # 判断输入以及输出文件是否正确输入
         if not os.path.exists(stri.join(vtd_change.vtd_inputs)):
-
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_INPUT)
         else:
 
             if not os.path.exists(stri.join(vtd_change.vtd_outputs)):
-
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_OUTPUT)
             else:
-
                 # 新建对应文件夹
                 self.vtd_make_new_dirs()
-
                 # 编写readme文件
                 self.vtd_readme()
-
-                # 输出新xosc文家
+                # 输出新xosc文件
                 self.write_vtd_output_xosc()
-
                 # 将车辆模型复制到对应文件夹内
                 self.copy_vehicle_model()
-
                 # 将传感器模型复制到对应文件夹内
                 self.copy_sensor_model()
 
-                print("成功导出文件：" + vtd_change.vtd_outdir )
+        # 检查输出文件是否齐全
+        self.out_check()
+        # 清空处理过程中写入的数据
+        self.clear_vtd_dir()
+
+        # print(vtd_change.vtd_name)
 
     # 获取输入文件路径
     def vtd_input_file(self):
-        fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",
-                                                                   default_file.DEFAULT_INPUT_DATABASE,
-                                                                   "All Files(*);;Text Files(*.txt)")
+        # fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
+        fileName = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径",
+                                                               default_file.DEFAULT_INPUT_DATABASE)
         vtd_change.vtd_inputs.clear()
         vtd_change.vtd_inputs.append(fileName)
         self.vtd_show_input.setText(fileName)
+
 
     # 获取输出文件夹路径
     def vtd_output_file(self):
@@ -106,11 +122,24 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     # 获取所需要的各种路径及文件名
     def get_vtd_dir(self):
         stri = '\n'
-        vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs)).stem
+        # vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs)).stem
         vtd_change.vtd_outdir = stri.join(vtd_change.vtd_outputs) + '/' + vtd_change.vtd_name + '_VTD'
         vtd_change.vtd_outdir_openx = vtd_change.vtd_outdir + "/OpenX"
         vtd_change.vtd_outdir_vehicle = vtd_change.vtd_outdir + "/VehicleModels"
         vtd_change.vtd_outdir_others = vtd_change.vtd_outdir + "/Others"
+        vtd_change.veh_model_name = self.vtd_vehicle_model_show.currentText()
+        vtd_change.sensor_model_name = self.vtd_sensor_show.currentText()
+
+    def clear_vtd_dir(self):
+        vtd_change.vtd_name = []
+        vtd_change.vtd_outdir = []
+        vtd_change.vtd_outdir_openx = []
+        vtd_change.vtd_outdir_vehicle = []
+        vtd_change.vtd_outdir_others = []
+        vtd_change.veh_model_name = []
+        vtd_change.sensor_model_name = []
+        # vtd_change.vtd_inputs = []
+        # vtd_change.vtd_outputs = []
 
     # 新建对应文件夹
     def vtd_make_new_dirs(self):
@@ -134,28 +163,28 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
     # 将车辆模型复制到对应文件夹内
     def copy_vehicle_model(self):
-        veh_model_name = self.vtd_vehicle_model_show.currentText()
+        #veh_model_name = self.vtd_vehicle_model_show.currentText()
 
-        if len(veh_model_name) == 0:
+        if len(vtd_change.veh_model_name) == 0:
             # print("Please select vehicle model!")
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                               default_file.DISPLAY_WARN_VEHICLE)
         else:
-            cur_vehicle_model_name = default_file.DEFAULT_VTD_VEHICLE_MODELS_DIR+ '/' + veh_model_name
-            out_vehicle_model_name = vtd_change.vtd_outdir_vehicle + '/' + veh_model_name
+            cur_vehicle_model_name = default_file.DEFAULT_VTD_VEHICLE_MODELS_DIR+ '/' + vtd_change.veh_model_name
+            out_vehicle_model_name = vtd_change.vtd_outdir_vehicle + '/' + vtd_change.veh_model_name
 
             copyfile(cur_vehicle_model_name, out_vehicle_model_name)
 
     # 将传感器模型复制到对应文件夹内
     def copy_sensor_model(self):
-        sensor_model_name = self.vtd_sensor_show.currentText()
+        # sensor_model_name = self.vtd_sensor_show.currentText()
 
-        if len(sensor_model_name) == 0:
+        if len(vtd_change.sensor_model_name) == 0:
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                               default_file.DISPLAY_WARN_SENSOR)
         else:
-            cur_sensor_model_name = default_file.DEFAULT_VTD_SENSOR_DIR + '/' + sensor_model_name
-            out_sensor_model_name = vtd_change.vtd_outdir_others + '/' + sensor_model_name
+            cur_sensor_model_name = default_file.DEFAULT_VTD_SENSOR_DIR + '/' + vtd_change.sensor_model_name
+            out_sensor_model_name = vtd_change.vtd_outdir_others + '/' + vtd_change.sensor_model_name
 
             copyfile(cur_sensor_model_name, out_sensor_model_name)
 
@@ -192,6 +221,23 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
         vtd_readme_file.close()
 
+    def out_check(self):
+        stri = '\n'
+        if os.path.exists(vtd_change.vtd_outdir_openx + '/' + vtd_change.vtd_name + '.xosc'):
+            if os.path.exists(vtd_change.vtd_outdir_vehicle + '/' + vtd_change.veh_model_name):
+                if os.path.exists(vtd_change.vtd_outdir_others + '/' + vtd_change.sensor_model_name):
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
+                                                      default_file.DiSPLAY_SUCESS_XOSC + vtd_change.vtd_outdir)
+                else:
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                      default_file.DISPLAY_WARN_OUT_SEN)
+            else:
+                msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                 default_file.DISPLAY_WARN_OUT_VEH)
+        else:
+            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                              default_file.DISPLAY_WARN_OUT_FILE)
+
     # 编写新的xosc文件
     def write_vtd_output_xosc(self):
         stri = '\n'
@@ -207,16 +253,18 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         out_m = 0
         out_n = 0
 
-        input_dir = stri.join(vtd_change.vtd_inputs)
-        output_dir = vtd_change.vtd_outdir + '/OpenX' + '/' + vtd_change.vtd_name
+        # vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs)
+        output_dir = vtd_change.vtd_outdir_openx + '/' + vtd_change.vtd_name
         output_dir = output_dir + '.txt'
-        output_list = vtd_change.vtd_outdir + '/OpenX' + '/'
+        output_list = vtd_change.vtd_outdir_openx + '/'
+
+        # print(output_dir)
 
         # 读取输入xosc文件并修改内容
-        file_input = open(input_dir, "r")
+        file_input = open(vtd_change.vtd_input_dir, "r")
 
         # 读取文件内包含的动作时间信息
-        for line in open(input_dir, "r"):
+        for line in open(vtd_change.vtd_input_dir, "r"):
 
             if 'SimulationTimeCondition' in line:
                 time_in = line.replace("<SimulationTimeCondition value=", "")
@@ -242,7 +290,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                     arr_cond = 1
 
         # 对就文件内内容进行逐行遍历，并对内容进行修改
-        for line in open(input_dir, "r"):
+        for line in open(vtd_change.vtd_input_dir, "r"):
             # 添加车辆模型以及驾驶员模型的数据库（数据库为VTD内自带）
             if '<CatalogLocations/>' in line:
                 new_xosc_content.append('    <CatalogLocations>' + '\n')
