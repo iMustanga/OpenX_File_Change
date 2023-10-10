@@ -7,6 +7,7 @@ from window import window_main, window_vtd
 import default_file
 import App_vtd
 import App_carmaker
+import App_prescan
 import win32api
 import win32process
 from threading import Thread
@@ -22,6 +23,7 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
     def setfun_main(self):
         self.openx_vtd_change.clicked.connect(self.show_vtd)
         self.openx_carmaker_change.clicked.connect(self.show_carmaker)
+        self.openx_prescan_change.clicked.connect(self.show_prescan)
         self.select_software_dir.clicked.connect(self.get_soft_dir)
         self.open_software.clicked.connect(self.open_roadrunner)
         self.case_down.clicked.connect(self.case_update)
@@ -50,6 +52,10 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
     def show_carmaker(self):
         self.carmaker_window = App_carmaker.window_carmaker_change()
         self.carmaker_window.show()
+
+    def show_prescan(self):
+        self.prescan_window = App_prescan.presc_change()
+        self.prescan_window.show()
 
     def get_soft_dir(self):
         stri = '\n'
