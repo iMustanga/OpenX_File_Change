@@ -7,6 +7,7 @@ from pathlib import Path
 from window.window_vtd import Ui_Window_vtd
 from shutil import copyfile
 import default_file
+from threading import Thread
 
 # 2023.09.18 封装到类 并独立为一个文件
 # 2023.09.18 增加点击按钮更新车辆模型以及传感器模型的显示
@@ -14,6 +15,7 @@ import default_file
 class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
     vtd_inputs = []
+    vtd_input = []
     vtd_outputs = []
     vtd_input_dir = []
     vtd_name = []
@@ -55,14 +57,19 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
     def vtd_ergodic(self):
         stri = '\n'
-        # print(vtd_change.vtd_inputs)
         vtd_dir = os.listdir(stri.join(vtd_change.vtd_inputs) + '/')
         for name in vtd_dir:
             vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs) + '/' + name
+            print(vtd_change.vtd_input_dir)
             portion = os.path.splitext(name)
             vtd_change.vtd_name = portion[0]
-            # print(vtd_change.vtd_name)
-            self.vtd_openx_change()
+            vtd_change.vtd_input = vtd_change.vtd_inputs
+            print(portion)
+            if portion[1]=='.xosc':
+                # print(vtd_change.vtd_name)
+                # new_thread = Thread(target=self.vtd_openx_change)
+                # new_thread.start()
+                self.vtd_openx_change()
 
 
 
@@ -74,13 +81,15 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         stri = '\n'
 
         # 判断输入以及输出文件是否正确输入
-        if not os.path.exists(stri.join(vtd_change.vtd_inputs)):
+        # print(vtd_change.vtd_input)
+        if not os.path.exists(stri.join(vtd_change.vtd_input)):
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_INPUT)
         else:
 
             if not os.path.exists(stri.join(vtd_change.vtd_outputs)):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_OUTPUT)
             else:
+                print("start")
                 # 新建对应文件夹
                 self.vtd_make_new_dirs()
                 # 编写readme文件
@@ -91,9 +100,9 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                 self.copy_vehicle_model()
                 # 将传感器模型复制到对应文件夹内
                 self.copy_sensor_model()
+                # 检查输出文件是否齐全
+                self.out_check()
 
-        # 检查输出文件是否齐全
-        self.out_check()
         # 清空处理过程中写入的数据
         self.clear_vtd_dir()
 
@@ -102,11 +111,14 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     # 获取输入文件路径
     def vtd_input_file(self):
         # fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
-        fileName = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径",
-                                                               default_file.DEFAULT_INPUT_DATABASE)
+        fileName = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
+
         vtd_change.vtd_inputs.clear()
         vtd_change.vtd_inputs.append(fileName)
         self.vtd_show_input.setText(fileName)
+
+
+
 
 
     # 获取输出文件夹路径
@@ -124,6 +136,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         stri = '\n'
         # vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs)).stem
         vtd_change.vtd_outdir = stri.join(vtd_change.vtd_outputs) + '/' + vtd_change.vtd_name + '_VTD'
+        # print(vtd_change.vtd_outdir)
         vtd_change.vtd_outdir_openx = vtd_change.vtd_outdir + "/OpenX"
         vtd_change.vtd_outdir_vehicle = vtd_change.vtd_outdir + "/VehicleModels"
         vtd_change.vtd_outdir_others = vtd_change.vtd_outdir + "/Others"
@@ -145,9 +158,11 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     def vtd_make_new_dirs(self):
         if not os.path.exists(vtd_change.vtd_outdir_openx):
             os.makedirs(vtd_change.vtd_outdir_openx)
+            # print(vtd_change.vtd_outdir)
         else:
             shutil.rmtree(vtd_change.vtd_outdir_openx)
             os.makedirs(vtd_change.vtd_outdir_openx)
+            # print(vtd_change.vtd_outdir)
 
         if not os.path.exists(vtd_change.vtd_outdir_vehicle):
             os.makedirs(vtd_change.vtd_outdir_vehicle)
@@ -221,6 +236,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
         vtd_readme_file.close()
 
+    # 输出检查
     def out_check(self):
         stri = '\n'
         if os.path.exists(vtd_change.vtd_outdir_openx + '/' + vtd_change.vtd_name + '.xosc'):
