@@ -25,6 +25,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     vtd_outdir_others = []
     veh_model_name = []
     sensor_model_name = []
+    vtd_input_con = 0
     # 程序所支持的车辆/动作数量
     vtd_act_support = 100
     vtd_time_arr = np.zeros((vtd_act_support, vtd_act_support))
@@ -39,6 +40,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
         # 设置各个按钮功能
         self.vtd_input.clicked.connect(self.vtd_input_file)
+        self.vtd_input_4.clicked.connect(self.vtd_select_input_dir)
         self.vtd_select_output.clicked.connect(self.vtd_output_file)
         # self.to_vtd.clicked.connect(self.vtd_openx_change)
         self.to_vtd.clicked.connect(self.vtd_ergodic)
@@ -56,21 +58,84 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         self.vtd_sensor_show.addItems(vtd_sensor)
 
     def vtd_ergodic(self):
+        self.to_vtd.setEnabled(False)
         stri = '\n'
-        vtd_dir = os.listdir(stri.join(vtd_change.vtd_inputs) + '/')
-        for name in vtd_dir:
-            vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs) + '/' + name
-            print(vtd_change.vtd_input_dir)
-            portion = os.path.splitext(name)
-            vtd_change.vtd_name = portion[0]
-            vtd_change.vtd_input = vtd_change.vtd_inputs
-            print(portion)
-            if portion[1]=='.xosc':
-                # print(vtd_change.vtd_name)
-                # new_thread = Thread(target=self.vtd_openx_change)
-                # new_thread.start()
-                self.vtd_openx_change()
 
+        size_input = np.size(vtd_change.vtd_inputs)
+        print(size_input)
+
+
+        if size_input > 1:
+            file_name = os.path.basename(str(vtd_change.vtd_inputs[0][0]))
+        else:
+            file_name = os.path.basename(str(vtd_change.vtd_inputs))
+        port = os.path.splitext(file_name)
+        # print(port[1])
+
+
+        # print(vtd_change.vtd_inputs)
+        if 'xosc' in port[1]:
+
+            if size_input > 1:
+                print("size_mult")
+                for i in range(size_input):
+                    # print(i)
+                    self.clear_vtd_dir()
+                    vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs[0][i])).stem
+                    vtd_change.vtd_input.append(vtd_change.vtd_inputs[0][i])
+                    vtd_change.vtd_input_dir = vtd_change.vtd_inputs[0][i]
+                    name_por = os.path.basename(str(vtd_change.vtd_inputs[0][i]))
+                    portion = os.path.splitext(name_por)
+                    if 'xosc' in portion[1]:
+                        self.vtd_openx_change()
+                    else:
+                        # print("error")
+                        msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                          default_file.DISPLAY_WARN_INPUT_FORMAT + str(vtd_change.vtd_inputs[0][i]))
+                    # print(i)
+            else:
+                print("one_mult")
+                self.clear_vtd_dir()
+                vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs[0][0])).stem
+                vtd_change.vtd_input.append(vtd_change.vtd_inputs[0][0])
+                vtd_change.vtd_input_dir = vtd_change.vtd_inputs[0][0]
+                name_por = os.path.basename(str(vtd_change.vtd_inputs[0][0]))
+                portion = os.path.splitext(name_por)
+                if 'xosc' in portion[1]:
+                    self.vtd_openx_change()
+                else:
+                    # print("error")
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                      default_file.DISPLAY_WARN_INPUT_FORMAT + str(
+                                                          vtd_change.vtd_inputs[0][0]))
+
+        elif port[1] == '':
+            print("size_one")
+            vtd_dir = os.listdir(stri.join(vtd_change.vtd_inputs) + '/')
+            for name in vtd_dir:
+                self.clear_vtd_dir()
+                vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs) + '/' + name
+
+                portion = os.path.splitext(name)
+                vtd_change.vtd_name = portion[0]
+
+                vtd_change.vtd_input = vtd_change.vtd_inputs
+
+                if 'xosc' in portion[1]:
+                    # print(vtd_change.vtd_name)
+                    # new_thread = Thread(target=self.vtd_openx_change)
+                    # new_thread.start()
+                    self.vtd_openx_change()
+                else:
+                    # print("error")
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                      default_file.DISPLAY_WARN_INPUT_FORMAT + vtd_change.vtd_input_dir)
+        else:
+            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                              default_file.DISPLAY_WARN_INPUT_FORMAT + str(
+                                                  vtd_change.vtd_inputs[0][0]))
+        self.clear_vtd_dir()
+        self.to_vtd.setEnabled(True)
 
 
     # xosc文件修改主函数
@@ -89,7 +154,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             if not os.path.exists(stri.join(vtd_change.vtd_outputs)):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_OUTPUT)
             else:
-                print("start")
+                # print("start")
                 # 新建对应文件夹
                 self.vtd_make_new_dirs()
                 # 编写readme文件
@@ -110,25 +175,56 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
     # 获取输入文件路径
     def vtd_input_file(self):
-        # fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
-        fileName = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
+        self.vtd_input.setEnabled(False)
+        self.vtd_input_4.setEnabled(False)
+        stri = '\n'
 
+        # fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
+        # fileName = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
+        fileName, fileType = QtWidgets.QFileDialog.getOpenFileNames(None, "选取文件", default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
         vtd_change.vtd_inputs.clear()
         vtd_change.vtd_inputs.append(fileName)
-        self.vtd_show_input.setText(fileName)
+        scu = np.size(vtd_change.vtd_inputs)
+        if scu > 1:
+            out_name = []
+            out_name = fileName[0]
+            for i in range(scu-1):
+                out_name = out_name + ' + ' + os.path.basename(fileName[i+1])
+            # print(out_name)
+            # self.vtd_show_input.setText(str(fileName[0]))
+            self.vtd_show_input.setText(out_name)
+        else:
+            # print(vtd_change.vtd_inputs)
+            # print(fileName)
+            self.vtd_show_input.setText(fileName[0])
+
+        self.vtd_input.setEnabled(True)
+        self.vtd_input_4.setEnabled(True)
+
+    def vtd_select_input_dir(self):
+        self.vtd_input.setEnabled(False)
+        self.vtd_input_4.setEnabled(False)
 
 
+        dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
+        vtd_change.vtd_inputs.clear()
+        vtd_change.vtd_inputs.append(dir_name)
+        self.vtd_show_input.setText(dir_name)
 
+        self.vtd_input.setEnabled(True)
+        self.vtd_input_4.setEnabled(True)
 
 
     # 获取输出文件夹路径
     def vtd_output_file(self):
+        self.vtd_select_output.setEnabled(False)
         directory = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径",
                                                                default_file.DEFAULT_OUTPUT_DIR)
 
         vtd_change.vtd_outputs.clear()
         vtd_change.vtd_outputs.append(directory)
         self.vtd_show_output.setText(directory)
+        self.vtd_select_output.setEnabled(True)
 
 
     # 获取所需要的各种路径及文件名
@@ -151,8 +247,8 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         vtd_change.vtd_outdir_others = []
         vtd_change.veh_model_name = []
         vtd_change.sensor_model_name = []
-        # vtd_change.vtd_inputs = []
-        # vtd_change.vtd_outputs = []
+        vtd_change.vtd_input = []
+
 
     # 新建对应文件夹
     def vtd_make_new_dirs(self):
@@ -242,8 +338,9 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         if os.path.exists(vtd_change.vtd_outdir_openx + '/' + vtd_change.vtd_name + '.xosc'):
             if os.path.exists(vtd_change.vtd_outdir_vehicle + '/' + vtd_change.veh_model_name):
                 if os.path.exists(vtd_change.vtd_outdir_others + '/' + vtd_change.sensor_model_name):
-                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
-                                                      default_file.DiSPLAY_SUCESS_XOSC + vtd_change.vtd_outdir)
+                    print("sucess")
+                    # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
+                    #                                   default_file.DiSPLAY_SUCESS_XOSC + vtd_change.vtd_outdir)
                 else:
                     msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                                       default_file.DISPLAY_WARN_OUT_SEN)

@@ -8,6 +8,7 @@ DISPLAY_WARN_SENSOR = "Please select sensor model!"
 DISPLAY_WARN_OUT_FILE = "The output folder is not set correctly!"
 DISPLAY_WARN_OUT_VEH = "The vehicle model is not set correctly!"
 DISPLAY_WARN_OUT_SEN = "The vehicle sensor is not set correctly!"
+DISPLAY_WARN_INPUT_FORMAT = "The input file format is incorrect: \n"
 DISPLAY_SUCESS = "Sucess"
 DiSPLAY_SUCESS_XOSC = "Sucessful output VTD file:"
 
