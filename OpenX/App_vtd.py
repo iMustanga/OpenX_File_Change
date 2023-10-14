@@ -193,7 +193,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             # print(out_name)
             # self.vtd_show_input.setText(str(fileName[0]))
             self.vtd_show_input.setText(out_name)
-        else:
+        elif scu == 1:
             # print(vtd_change.vtd_inputs)
             # print(fileName)
             self.vtd_show_input.setText(fileName[0])
