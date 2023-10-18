@@ -277,44 +277,46 @@ def tra(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
             if line.startswith("Traffic.") and line.endswith(".Limit =\n"):
                 # 修改该行的内容
                 testrun_contents[i] = line[:-2] + "=t {}\n"
+        for i, line in enumerate(testrun_contents):
+            if line.startswith("DrivMan.Man.0.LongStep.0.Dyn"):
+                testrun_contents[i] ="DrivMan.Man.0.LongStep.0.Dyn= VelControl {} 0.0 1.0 0 1 0\n".format(3.6*init_speed)
             # 回到文件开头
         testrun.seek(0)
         # 用修改后的内容覆盖原文件
         testrun.writelines(testrun_contents)
 
 
-    #以下为CarMaker官方定义函数，此处的作用为设置车辆初始速度
-
-#以下为CarMaker官方定义函数，此处的作用为设置车辆初始速度
-    async def make_variations():
-        project_path = pathlib.Path(cmaker_dir)
-        cmapi.Project.load(project_path)
-
-        testrun_path = pathlib.Path(testrun_file)
-        testrun = cmapi.Project.instance().load_testrun_parametrization(testrun_path)
-        #print(testrun.get_path())
-        # vehicle_path = pathlib.Path("Examples/DemoCar_SensorRadarRSI")
-        # vehicle = cmapi.Project.instance().load_vehicle_parametrization(vehicle_path)
-
-        # Select vehicle by modifying the Parameter 'Vehicle' of the testrun parametrization object.
-        # This Parameter corresponds with the infofile key 'Vehicle' in the testrun infofile.
-        a=testrun.set_parameter_value("DrivMan.Man.0.LongStep.0.Dyn", 'VelControl {} 0.0 1.0 0 1 0'.format(3.6*init_speed))
-
-        cmapi.Project.write_parametrization(a,testrun)
-        # Make a variation containing a copy of the testrun
-        variation = cmapi.Variation.create_from_testrun(testrun.clone())
-        variation.set_name("Variation")
-
-        return [variation]
-    async def main():
-        variations = await make_variations()
-        # for variation in variations:
-        #
-        #     cmapi.logger.info(f"Testrun parametrization of variation {variation.get_name()}:")
-        #     param_string = []
-        #     for parameter in variation.get_testrun().params_by_key.values():
-        #         param_string.append(f"{parameter.key} : {parameter.value}")
-        #
-        #     cmapi.logger.info("\n".join(param_string))
-
-    cmapi.Task.run_main_task(main())
+#
+# #以下为CarMaker官方定义函数，此处的作用为设置车辆初始速度
+#     async def make_variations():
+#         project_path = pathlib.Path(cmaker_dir)
+#         cmapi.Project.load(project_path)
+#
+#         testrun_path = pathlib.Path(testrun_file)
+#         testrun = cmapi.Project.instance().load_testrun_parametrization(testrun_path)
+#         #print(testrun.get_path())
+#         # vehicle_path = pathlib.Path("Examples/DemoCar_SensorRadarRSI")
+#         # vehicle = cmapi.Project.instance().load_vehicle_parametrization(vehicle_path)
+#
+#         # Select vehicle by modifying the Parameter 'Vehicle' of the testrun parametrization object.
+#         # This Parameter corresponds with the infofile key 'Vehicle' in the testrun infofile.
+#         a=testrun.set_parameter_value("DrivMan.Man.0.LongStep.0.Dyn", 'VelControl {} 0.0 1.0 0 1 0'.format(3.6*init_speed))
+#
+#         cmapi.Project.write_parametrization(a,testrun)
+#         # Make a variation containing a copy of the testrun
+#         variation = cmapi.Variation.create_from_testrun(testrun.clone())
+#         variation.set_name("Variation")
+#
+#         return [variation]
+#     async def main():
+#         variations = await make_variations()
+#         # for variation in variations:
+#         #
+#         #     cmapi.logger.info(f"Testrun parametrization of variation {variation.get_name()}:")
+#         #     param_string = []
+#         #     for parameter in variation.get_testrun().params_by_key.values():
+#         #         param_string.append(f"{parameter.key} : {parameter.value}")
+#         #
+#         #     cmapi.logger.info("\n".join(param_string))
+#
+#     cmapi.Task.run_main_task(main())
