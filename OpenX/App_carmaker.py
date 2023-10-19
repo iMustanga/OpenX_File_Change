@@ -26,16 +26,16 @@ class window_carmaker_change(QtWidgets.QWidget, Ui_window_carmaker):
         self.carmaker_select_input.clicked.connect(self.carmaker_input_init)
         self.carmaker_select_output.clicked.connect(self.carmaker_output_init)
         self.to_carmaker.clicked.connect(self.carmaker_openx_change)
-        self.carmaker_vehicle_model_select.clicked.connect(self.vehicle_update)
-        self.carmaker_sensor_select.clicked.connect(self.sensor_update)
+        # self.carmaker_vehicle_model_select.clicked.connect(self.vehicle_update)
+        # self.carmaker_sensor_select.clicked.connect(self.sensor_update)
 
-        self.carmaker_vehicle_model_show.clear()
+        '''self.carmaker_vehicle_model_show.clear()
         self.carmaker_vehicle = os.listdir(default_file.DEFAULT_CMAKER_VEHICLE_MODELS_DIR)
         self.carmaker_vehicle_model_show.addItems(self.carmaker_vehicle)
 
         self.carmaker_sensor_show.clear()
         self.carmaker_sensor = os.listdir(default_file.DEFAULT_CMAKER_SENSOR_DIR)
-        self.carmaker_sensor_show.addItems(self.carmaker_sensor)
+        self.carmaker_sensor_show.addItems(self.carmaker_sensor)'''
 
     def carmaker_input_init(self):
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",
