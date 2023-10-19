@@ -5,7 +5,7 @@ import numpy as np
 import shutil
 from pathlib import Path
 from window.window_vtd import Ui_Window_vtd
-from shutil import copyfile
+from shutil import copyfile, copytree
 import default_file
 from threading import Thread
 
@@ -297,7 +297,9 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             cur_sensor_model_name = default_file.DEFAULT_VTD_SENSOR_DIR + '/' + vtd_change.sensor_model_name
             out_sensor_model_name = vtd_change.vtd_outdir_others + '/' + vtd_change.sensor_model_name
 
-            copyfile(cur_sensor_model_name, out_sensor_model_name)
+            # copyfile(cur_sensor_model_name, out_sensor_model_name)
+            # 10.13修改 复制文件夹
+            copytree(cur_sensor_model_name, out_sensor_model_name)
 
     # 点击按钮更新车辆模型内容
     def vehicle_update(self):
@@ -329,6 +331,21 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             "3.需要注意的是输入的新的xosc文件名必须与osgb以及xodr文件的文件名完全相同，否则会导致在读取osgb以及xodr文件时发生错误 \n \n")
         vtd_readme_file.write(
             "4.需要在路径~/VIRES/VTD.2021.4/Data/Projects/Current/Databases下新建一个名为roadrunner的文件夹，并将osgb以及xodr文件存储在该路径下，否则会导致在读取osgb以及xodr文件时发生错误 \n \n")
+
+        # 10.13修改 增加了对于传感器模型的说明
+        vtd_readme_file.write('三、传感器部分操作 \n')
+        vtd_readme_file.write('RSM1激光雷达  毫米波雷达 \n \n')
+        vtd_readme_file.write('1.需要将Others目录下的传感器模型及其配置文件夹复制或覆盖到VTD中相应Setup的路径下 \n \n')
+        vtd_readme_file.write('2.传感器模型：将Plugins和Data文件夹复制到VTD中的Setup目录下，如：~/VIRES/VTD.2021.4/Data/Setups/~/ \n \n')
+        vtd_readme_file.write(
+            '3.配置文件：将Config文件夹覆盖到VTD中Setup目录下的Config文件夹，如：~/VIRES/VTD.2021.4/Data/Setups/~/Config \n \n')
+        vtd_readme_file.write('超声波雷达 \n \n')
+        vtd_readme_file.write('1.需要将moduleManager.xml配置文件复制到VTD中对应Project目录下的Modulemanager文件夹下 \n \n')
+        vtd_readme_file.write('2.配置内包含两个VTD内置的完美传感器Sensor3，Sensor4，可以更改安装位置及名称和数量 \n \n')
+        vtd_readme_file.write('3.激活配置内的传感器需要通过发送VTD的SCP报文： \n')
+        vtd_readme_file.write(
+            '<Display><SensorSymbols enable="true" sensor="Sensor3" showCone="true" /><SensorSymbols enable="true" sensor="Sensor4" showCone="true" /><Database enable="true" streetLamps="false" /><VistaOverlay enable="false" /></Display> \n \n')
+
 
         vtd_readme_file.close()
 
