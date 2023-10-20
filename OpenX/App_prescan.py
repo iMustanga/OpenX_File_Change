@@ -157,9 +157,10 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                         print("非xosc文件列表： %s" % not_xosc_list1)
                         self.show_result()
 
-                        file_string = '\n'.join(not_xosc_list1)
-                        msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
-                                                          '以下文件不是xosc文件，无法修改：\n' + file_string)
+                        if not_xosc_list1:
+                            file_string = '\n'.join(not_xosc_list1)
+                            msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
+                                                              '以下文件不是xosc文件，无法修改：\n' + file_string)
 
                     else:
                         print("单文件场景")
@@ -221,8 +222,9 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                 # msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
                 #                               '在所选文件夹中，以下文件不是xosc文件，无法进行修改：' + file_string)
                 # 方法二：
-                file_string = '\n'.join(not_xosc_list2)
-                msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告', '在所选文件夹' + self.dir_name + '中，以下文件不是xosc文件，无法修改：\n' + file_string)
+                if not_xosc_list2:
+                    file_string = '\n'.join(not_xosc_list2)
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告', '在所选文件夹' + self.dir_name + '中，以下文件不是xosc文件，无法修改：\n' + file_string)
 
 
 
