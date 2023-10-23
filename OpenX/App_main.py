@@ -10,6 +10,7 @@ import App_carmaker
 import App_prescan
 import win32api
 import win32process
+import numpy as np
 from threading import Thread
 
 class window_main(QtWidgets.QWidget, Ui_MainWindow):
@@ -26,14 +27,18 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         self.openx_prescan_change.clicked.connect(self.show_prescan)
         self.select_software_dir.clicked.connect(self.get_soft_dir)
         self.open_software.clicked.connect(self.open_roadrunner)
-        self.case_down.clicked.connect(self.case_update)
+
+        # self.case_down.clicked.connect(self.case_update)
+        self.case_down.clicked.connect(self.download_time_cont)
+
         self.report.clicked.connect(self.report_update)
         self.range.clicked.connect(self.range_update)
 
-        # 设置打开页面即进行案例下载显示
+        '''# 设置打开页面即进行案例下载显示
         self.case_download_show.clear()
         openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
-        self.case_download_show.addItems(openx_case)
+        self.case_download_show.addItems(openx_case)'''
+        self.download_time_cont()
 
         # 设置打开页面即进行测试报告显示
         self.report_show.clear()
@@ -56,6 +61,62 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
     def show_prescan(self):
         self.prescan_window = App_prescan.presc_change()
         self.prescan_window.show()
+
+    def download_time_cont(self):
+        dwc_dir = default_file.DEFAULT_DWC_SOFT_DIR
+        openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
+        if not os.path.exists(dwc_dir):
+            dwc_file = open(dwc_dir, mode='w')
+            for case in openx_case:
+                # name_por = os.path.basename(str(vtd_change.vtd_inputs[0][i]))
+                portion = os.path.splitext(case)
+                # print(portion)
+                if 'xosc' in portion[1]:
+                    dwc_file.write(case + ' 下载次数：' + '0' + '\n')
+                    # line = next(dwc_file)
+                elif portion[1] == '':
+                    dwc_file.write(case + ' 下载次数：' + '0' + '\n')
+                    # line = next(dwc_file)
+            dwc_file.close()
+
+        # self.download_time_add('C4_4ac.xosc')
+        # cont_time = 0
+        # line_time = []
+        dwc_read = open(dwc_dir, mode='r')
+        dwc_info = []
+        for line in open(dwc_dir, mode='r'):
+            line_info = line.replace('\n', '')
+            # line_name = line_info.replace(' 下载次数：', '')
+            # line_name = line_name.replace()
+            dwc_info.append(line_info)
+        dwc_read.close()
+        # print(dwc_info)
+        self.case_download_show.clear()
+        self.case_download_show.addItems(dwc_info)
+
+    def download_time_add(self, name):
+        dwc_dir = default_file.DEFAULT_DWC_SOFT_DIR
+        dwc_com = []
+        dwc_change = open(dwc_dir, mode='r')
+        for line in open(dwc_dir, mode='r'):
+            if name in line:
+
+                line_time = line.replace(name, '')
+                line_time = line_time.replace(' 下载次数：', '')
+                line_time = line_time.replace(' \n', '')
+                cont_time = int(line_time)
+                cont_time = cont_time + 1
+                # print(cont_time)
+                dwc_com.append(name + ' 下载次数：' + str(cont_time) + '\n')
+                line = next(dwc_change)
+                # print(dwc_com)
+            else:
+                dwc_com.append(dwc_change.readline())
+
+
+
+        self.download_time_cont()
+
 
     def get_soft_dir(self):
         stri = '\n'

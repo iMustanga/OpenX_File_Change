@@ -8,6 +8,7 @@ from window.window_vtd import Ui_Window_vtd
 from shutil import copyfile, copytree
 import default_file
 from threading import Thread
+import App_main
 
 # 2023.09.18 封装到类 并独立为一个文件
 # 2023.09.18 增加点击按钮更新车辆模型以及传感器模型的显示
@@ -25,6 +26,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     vtd_outdir_others = []
     veh_model_name = []
     sensor_model_name = []
+    vtd_out_check = []
     vtd_input_con = 0
     # 程序所支持的车辆/动作数量
     vtd_act_support = 100
@@ -60,80 +62,116 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     def vtd_ergodic(self):
         self.to_vtd.setEnabled(False)
         stri = '\n'
+        sta = 1
+        tls = 1
+        file_ic = []
 
         size_input = np.size(vtd_change.vtd_inputs)
-        print(size_input)
+        # print(size_input)
 
 
         if size_input > 1:
             file_name = os.path.basename(str(vtd_change.vtd_inputs[0][0]))
         else:
             file_name = os.path.basename(str(vtd_change.vtd_inputs))
+            file_name = file_name.replace("']", '')
         port = os.path.splitext(file_name)
         # print(port[1])
+        MA = App_main.window_main()
 
+        while sta == 1:
+            #print(vtd_change.vtd_inputs)
 
-        # print(vtd_change.vtd_inputs)
-        if 'xosc' in port[1]:
+            # print(vtd_change.vtd_inputs)
+            if 'xosc' in port[1]:
 
-            if size_input > 1:
-                print("size_mult")
-                for i in range(size_input):
-                    # print(i)
+                if size_input > 1:
+                    print("size_mult")
+                    for i in range(size_input):
+                        # print(i)
+                        self.clear_vtd_dir()
+                        vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs[0][i])).stem
+                        vtd_change.vtd_input.append(vtd_change.vtd_inputs[0][i])
+                        vtd_change.vtd_input_dir = vtd_change.vtd_inputs[0][i]
+                        name_por = os.path.basename(str(vtd_change.vtd_inputs[0][i]))
+                        portion = os.path.splitext(name_por)
+                        if 'xosc' in portion[1]:
+                            self.vtd_openx_change()
+                            MA.download_time_add(name_por)
+                        else:
+                            # print("error")
+                            # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + str(vtd_change.vtd_inputs[0][i]))
+                            file_ic.append(vtd_change.vtd_inputs[0][i])
+                    sta = 0
+
+                        # print(i)
+                else:
+                    print("one_mult")
                     self.clear_vtd_dir()
-                    vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs[0][i])).stem
-                    vtd_change.vtd_input.append(vtd_change.vtd_inputs[0][i])
-                    vtd_change.vtd_input_dir = vtd_change.vtd_inputs[0][i]
-                    name_por = os.path.basename(str(vtd_change.vtd_inputs[0][i]))
+                    vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs[0][0])).stem
+                    vtd_change.vtd_input.append(vtd_change.vtd_inputs[0][0])
+                    vtd_change.vtd_input_dir = vtd_change.vtd_inputs[0][0]
+                    name_por = os.path.basename(str(vtd_change.vtd_inputs[0][0]))
                     portion = os.path.splitext(name_por)
                     if 'xosc' in portion[1]:
                         self.vtd_openx_change()
+                        MA.download_time_add(name_por)
                     else:
                         # print("error")
-                        msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
-                                                          default_file.DISPLAY_WARN_INPUT_FORMAT + str(vtd_change.vtd_inputs[0][i]))
-                    # print(i)
+                        # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + str(vtd_change.vtd_inputs[0][0]))
+                        file_ic.append(vtd_change.vtd_inputs[0][0])
+                    sta = 0
+
+            elif port[1] == '':
+                if not vtd_change.vtd_inputs == []:
+                    print("size_one")
+                    vtd_dir = os.listdir(stri.join(vtd_change.vtd_inputs) + '/')
+                    MA.download_time_add(file_name)
+                    for name in vtd_dir:
+                        self.clear_vtd_dir()
+                        vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs) + '/' + name
+
+                        portion = os.path.splitext(name)
+                        vtd_change.vtd_name = portion[0]
+
+                        vtd_change.vtd_input = vtd_change.vtd_inputs
+
+                        if 'xosc' in portion[1]:
+                            # print(vtd_change.vtd_name)
+                            # new_thread = Thread(target=self.vtd_openx_change)
+                            # new_thread.start()
+                            self.vtd_openx_change()
+                        else:
+                            # print("error")
+                            # print(vtd_change.vtd_input_dir)
+                            # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + vtd_change.vtd_input_dir)
+                            file_ic.append(vtd_change.vtd_input_dir)
+                        sta = 0
+                else:
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                      default_file.DISPLAY_WARN_INPUT)
+                    sta = 0
             else:
-                print("one_mult")
-                self.clear_vtd_dir()
-                vtd_change.vtd_name = Path(str(vtd_change.vtd_inputs[0][0])).stem
-                vtd_change.vtd_input.append(vtd_change.vtd_inputs[0][0])
-                vtd_change.vtd_input_dir = vtd_change.vtd_inputs[0][0]
-                name_por = os.path.basename(str(vtd_change.vtd_inputs[0][0]))
-                portion = os.path.splitext(name_por)
-                if 'xosc' in portion[1]:
-                    self.vtd_openx_change()
-                else:
-                    # print("error")
-                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
-                                                      default_file.DISPLAY_WARN_INPUT_FORMAT + str(
-                                                          vtd_change.vtd_inputs[0][0]))
+                print(str(vtd_change.vtd_inputs[0][0]))
+                if size_input > 1:
+                    if tls < size_input:
+                        file_name = os.path.basename(str(vtd_change.vtd_inputs[0][tls]))
+                        port = os.path.splitext(file_name)
+                        tls = tls + 1
 
-        elif port[1] == '':
-            print("size_one")
-            vtd_dir = os.listdir(stri.join(vtd_change.vtd_inputs) + '/')
-            for name in vtd_dir:
-                self.clear_vtd_dir()
-                vtd_change.vtd_input_dir = stri.join(vtd_change.vtd_inputs) + '/' + name
-
-                portion = os.path.splitext(name)
-                vtd_change.vtd_name = portion[0]
-
-                vtd_change.vtd_input = vtd_change.vtd_inputs
-
-                if 'xosc' in portion[1]:
-                    # print(vtd_change.vtd_name)
-                    # new_thread = Thread(target=self.vtd_openx_change)
-                    # new_thread.start()
-                    self.vtd_openx_change()
-                else:
-                    # print("error")
-                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
-                                                      default_file.DISPLAY_WARN_INPUT_FORMAT + vtd_change.vtd_input_dir)
-        else:
+                # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                #                                  default_file.DISPLAY_WARN_INPUT_FORMAT + str(
+                #                                      vtd_change.vtd_inputs[0][0]))
+        if not vtd_change.vtd_out_check == []:
+            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
+                                            default_file.DiSPLAY_SUCESS_XOSC + '\n' + stri.join(vtd_change.vtd_out_check))
+            vtd_change.vtd_out_check = []
+        vtd_change.vtd_out_check = []
+        if not file_ic == []:
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
-                                              default_file.DISPLAY_WARN_INPUT_FORMAT + str(
-                                                  vtd_change.vtd_inputs[0][0]))
+                                              default_file.DISPLAY_WARN_INPUT_FORMAT + '\n' + stri.join(file_ic))
+            file_ic = []
+        file_ic = []
         self.clear_vtd_dir()
         self.to_vtd.setEnabled(True)
 
@@ -149,10 +187,12 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         # print(vtd_change.vtd_input)
         if not os.path.exists(stri.join(vtd_change.vtd_input)):
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_INPUT)
+            return
         else:
 
             if not os.path.exists(stri.join(vtd_change.vtd_outputs)):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, default_file.DISPLAY_WARN_OUTPUT)
+                return
             else:
                 # print("start")
                 # 新建对应文件夹
@@ -356,6 +396,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             if os.path.exists(vtd_change.vtd_outdir_vehicle + '/' + vtd_change.veh_model_name):
                 if os.path.exists(vtd_change.vtd_outdir_others + '/' + vtd_change.sensor_model_name):
                     print("sucess")
+                    vtd_change.vtd_out_check.append(vtd_change.vtd_name)
                     # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
                     #                                   default_file.DiSPLAY_SUCESS_XOSC + vtd_change.vtd_outdir)
                 else:

@@ -27,7 +27,8 @@ DEFAULT_VTD_SENSOR_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\VTD_
 DEFAULT_CASE_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\database"
 DEFAULT_REPORT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\Carmaker_Vehicle"
 DEFAULT_RANGE_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\output"
-DEFAULT_ROADRUNNER_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\database\\soft_path.txt"
+DEFAULT_ROADRUNNER_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\soft_path.txt"
+DEFAULT_DWC_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\dwc.txt"
 '''
 
 # linux
