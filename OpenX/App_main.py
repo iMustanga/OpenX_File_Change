@@ -78,6 +78,33 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
                     dwc_file.write(case + ' 下载次数：' + '0' + '\n')
                     # line = next(dwc_file)
             dwc_file.close()
+        else:
+            dwc_af = []
+            dwc_file = open(dwc_dir, mode='r')
+            for case in openx_case:
+                af_set = 0
+                for line in open(dwc_dir, mode='r'):
+                    if case in line:
+                        # print('in file')
+                        af_set = 0
+                        break
+                    else:
+                        af_set = 1
+                        # dwc_af.append(case + ' 下载次数：' + '0' + '\n')
+                if af_set == 1:
+                    portion = os.path.splitext(case)
+                    # print(portion)
+                    if 'xosc' in portion[1]:
+                        dwc_af.append(case + ' 下载次数：' + '0' + '\n')
+                        # line = next(dwc_file)
+                    elif portion[1] == '':
+                        dwc_af.append(case + ' 下载次数：' + '0' + '\n')
+            dwc_file.close()
+            # print(dwc_af)
+            dwc_write = open(dwc_dir, mode='a')
+            for line in dwc_af:
+                dwc_write.write(line)
+            dwc_write.close()
 
         # self.download_time_add('C4_4ac.xosc')
         # cont_time = 0
@@ -101,6 +128,16 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         for line in open(dwc_dir, mode='r'):
             if name in line:
 
+                line_show = line.replace('\n', '')
+                show_cont = 0
+                # print(len(line_show))
+                # print(line_show[18])
+                '''for i in len(line_show):
+                    if line_show[i] == ':':
+                        show_cont = i
+                        print(show_cont)'''
+                # print(line_show[-2], line_show[-1])
+
                 line_time = line.replace(name, '')
                 line_time = line_time.replace(' 下载次数：', '')
                 line_time = line_time.replace(' \n', '')
@@ -113,9 +150,17 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
             else:
                 dwc_com.append(dwc_change.readline())
 
+        dwc_change.close()
 
+        dwc_sum = open(dwc_dir, mode='w')
+        dwc_sum.truncate()
+        for line in dwc_com:
+            dwc_sum.writelines(line)
+        dwc_sum.close()
 
-        self.download_time_cont()
+        # self.download_time_cont()
+        new_thread = Thread(target=self.download_time_cont)
+        new_thread.start()
 
 
     def get_soft_dir(self):
