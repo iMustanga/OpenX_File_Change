@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_window_carmaker(object):
     def setupUi(self, window_carmaker):
         window_carmaker.setObjectName("window_carmaker")
-        window_carmaker.resize(1118, 735)
+        window_carmaker.resize(1119, 735)
         self.gridLayout = QtWidgets.QGridLayout(window_carmaker)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -188,18 +188,18 @@ class Ui_window_carmaker(object):
         self.horizontalLayout_2.addWidget(self.carmaker_model_select)
         spacerItem13 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.horizontalLayout_2.addItem(spacerItem13)
-        self.carmaker_vehicle_model_show = QtWidgets.QComboBox(window_carmaker)
+        self.carmaker_model_show = QtWidgets.QComboBox(window_carmaker)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.carmaker_vehicle_model_show.sizePolicy().hasHeightForWidth())
-        self.carmaker_vehicle_model_show.setSizePolicy(sizePolicy)
-        self.carmaker_vehicle_model_show.setMinimumSize(QtCore.QSize(541, 41))
-        self.carmaker_vehicle_model_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
+        sizePolicy.setHeightForWidth(self.carmaker_model_show.sizePolicy().hasHeightForWidth())
+        self.carmaker_model_show.setSizePolicy(sizePolicy)
+        self.carmaker_model_show.setMinimumSize(QtCore.QSize(541, 41))
+        self.carmaker_model_show.setStyleSheet("border:2px solid rgb(186,186,186);\n"
 "background-color: rgb(255, 255, 255);\n"
 "border-radius:10px")
-        self.carmaker_vehicle_model_show.setObjectName("carmaker_vehicle_model_show")
-        self.horizontalLayout_2.addWidget(self.carmaker_vehicle_model_show)
+        self.carmaker_model_show.setObjectName("carmaker_model_show")
+        self.horizontalLayout_2.addWidget(self.carmaker_model_show)
         self.gridLayout.addLayout(self.horizontalLayout_2, 8, 3, 1, 1)
         spacerItem14 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.gridLayout.addItem(spacerItem14, 9, 3, 1, 1)
