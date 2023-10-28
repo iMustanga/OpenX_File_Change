@@ -45,6 +45,9 @@ class CarMakerUtils:
             os.path.join(cmaker_dir, xosc_dir, file_name + '.xosc')
         self.vehicle_model_database = cur_dir + "\\CarMaker_Vehicle"
         self.sensor_model_database = cur_dir + "\\CarMaker_Sensor"
+        # 10.19修改
+        self.model_database = cur_dir + "\\Carmaker_VehicleSensor"
+
         self.src_database = cur_dir + "\\CarMaker_Src"
         self.package_xosc_dir = None
         self.package_vehicle_dir = None
@@ -97,32 +100,43 @@ class CarMakerUtils:
         else:
             return
 
-    def copy_vehicle_models(self, vehicle_model_name: str):
-        vehicle_model_file_path = os.path.join(self.vehicle_model_database, vehicle_model_name)
-        cmaker_vehicle_model_path = os.path.join(self.cmaker_dir, self.cmaker_data_dir,
-                                                 self.cmaker_vehicle_dir, vehicle_model_name)
-        copy(vehicle_model_file_path, cmaker_vehicle_model_path)
-        # 打包vehicle_models文件
-        if os.path.exists(self.package_vehicle_dir):
-            copy(vehicle_model_file_path, os.path.join(self.package_vehicle_dir, vehicle_model_name))
-        else:
-            return
+    # 10.24修改 加入src打包
+    def copy_models(self, model_name: str):
+        model_file_path = os.path.join(self.model_database, model_name)
+        # 获取文件夹下的所有子文件夹
+        file_names = os.listdir(model_file_path)
+        for file_name in file_names:
+            if file_name == 'vehicle':
+                Vehicle_file_path = os.path.join(model_file_path, file_name)
+                vehicle_name = os.listdir(Vehicle_file_path)
+                for vehicle in vehicle_name:
+                    Vehicle_file_paths = os.path.join(Vehicle_file_path, vehicle)
+                    cmaker_vehicle_model_path = os.path.join(self.cmaker_dir, self.cmaker_data_dir,
+                                                             self.cmaker_vehicle_dir)
+                    copy(Vehicle_file_paths, cmaker_vehicle_model_path)
+                    if os.path.exists(self.package_vehicle_dir):
+                        copy(Vehicle_file_paths, os.path.join(self.package_vehicle_dir))
 
-    def copy_sensor_models(self, sensor_name=None):
-        if sensor_name is not None:
-            sensor_model_file_path = os.path.join(self.sensor_model_database, sensor_name)
-            cmaker_sensor_model_path = os.path.join(self.cmaker_dir, self.cmaker_data_dir,
-                                                     self.cmaker_sensor_dir, sensor_name)
-            copy(sensor_model_file_path, cmaker_sensor_model_path)
-            # 打包sensor_models文件
-            if os.path.exists(self.package_vehicle_dir):
-                copy(sensor_model_file_path, os.path.join(self.package_vehicle_dir, sensor_name))
-            else:
-                return
+            if file_name == 'sensor':
+                Sensor_file_path = os.path.join(model_file_path, file_name)
+                sensor_name = os.listdir(Sensor_file_path)
+                for sensor in sensor_name:
+                    Sensor_file_paths = os.path.join(Sensor_file_path, sensor)
+                    cmaker_sensor_model_path = os.path.join(self.cmaker_dir, self.cmaker_data_dir,
+                                                            self.cmaker_sensor_dir)
+                    copy(Sensor_file_paths, cmaker_sensor_model_path)
+                    if os.path.exists(self.package_sensor_dir):
+                        copy(Sensor_file_paths, os.path.join(self.package_sensor_dir))
 
-    def copy_cm_src(self):
-        # @TODO
-        pass
+            if file_name == 'src':
+                Src_file_path = os.path.join(model_file_path, file_name)
+                src_name = os.listdir(Src_file_path)
+                for src in src_name:
+                    Src_file_paths = os.path.join(Src_file_path, src)
+                    cmaker_src_model_path = os.path.join(self.cmaker_dir, self.cmaker_src_dir)
+                    copy(Src_file_paths, cmaker_src_model_path)
+                    if os.path.exists(self.package_src_dir):
+                        copy(Src_file_paths, os.path.join(self.package_src_dir))
 
     def xosc_change(self, vehicle_model_name: str):
         # 接入xosc转换API
@@ -173,15 +187,10 @@ class CarMakerUtils:
                                  output_dir=new_file_path_and_name,
                                  cmaker_dir=self.cmaker_dir)
 
-    def carmaker_process(self, vehicle_model_name, sensor_name=None, src=None):
+    def carmaker_process(self, model_name, src=None):
         self.create_package()
         self.copy_readme()
         self.copy_xodr_and_osgb()
-        self.copy_vehicle_models(vehicle_model_name)
-        self.copy_sensor_models(sensor_name)
-        self.copy_cm_src()
-        self.xosc_change(vehicle_model_name)
+        self.copy_models(model_name)
+        self.xosc_change(model_name)
         # print("debug")
-
-
-
