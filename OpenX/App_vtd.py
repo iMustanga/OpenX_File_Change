@@ -321,10 +321,10 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                               default_file.DISPLAY_WARN_VEHICLE)
         else:
-            cur_vehicle_model_name = default_file.DEFAULT_VTD_VEHICLE_MODELS_DIR+ '/' + vtd_change.veh_model_name
+            cur_vehicle_model_name = default_file.DEFAULT_VTD_VEHICLE_MODELS_DIR + '\\' + vtd_change.veh_model_name
             out_vehicle_model_name = vtd_change.vtd_outdir_vehicle + '/' + vtd_change.veh_model_name
 
-            copyfile(cur_vehicle_model_name, out_vehicle_model_name)
+            copytree(cur_vehicle_model_name, out_vehicle_model_name)
 
     # 将传感器模型复制到对应文件夹内
     def copy_sensor_model(self):
@@ -333,10 +333,11 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         if len(vtd_change.sensor_model_name) == 0:
             msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                               default_file.DISPLAY_WARN_SENSOR)
+        elif vtd_change.sensor_model_name == '无':
+            pass
         else:
             cur_sensor_model_name = default_file.DEFAULT_VTD_SENSOR_DIR + '/' + vtd_change.sensor_model_name
             out_sensor_model_name = vtd_change.vtd_outdir_others + '/' + vtd_change.sensor_model_name
-
             # copyfile(cur_sensor_model_name, out_sensor_model_name)
             # 10.13修改 复制文件夹
             copytree(cur_sensor_model_name, out_sensor_model_name)
