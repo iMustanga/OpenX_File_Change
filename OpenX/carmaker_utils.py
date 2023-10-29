@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 import Xml_change_followtrajectory
 import Xml_change_dur
 import Xml_changetools
-
+import rd5_change
 # 2023.09.13 移除了对xosc文件进行改名的功能
 
 class CarMakerUtils:
@@ -19,7 +19,8 @@ class CarMakerUtils:
                  cmaker_vehicle_dir: str = 'Vehicle',
                  cmaker_sensor_dir: str = 'Sensor',
                  cmaker_src_dir: str = 'src',
-                 xosc_dir: str = 'Data_osc'):
+                 xosc_dir: str = 'Data_osc',
+                 rd5_dir: str = 'Data/Road'):
         """
         :param cmaker_dir:CarMaker工程根目录
         :param input_dir:输入路径，就是存放xosc、xodr与osgb文件的路径
@@ -29,6 +30,7 @@ class CarMakerUtils:
         :param cmaker_sensor_dir:不建议更改，CarMaker工程的Sensor路径
         :param cmaker_src_dir:不建议更改，CarMaker工程的src路径
         :param xosc_dir:不建议更改，CarMaker工程的Data_osc路径
+        :param rd5_dir:不建议更改，CarMaker工程的Data/Road路径
         """
         self.cur_dir = cur_dir
         self.cmaker_dir = cmaker_dir
@@ -40,6 +42,7 @@ class CarMakerUtils:
         self.cmaker_sensor_dir = cmaker_sensor_dir
         self.cmaker_src_dir = cmaker_src_dir
 
+        self.rd5_dir = rd5_dir
         self.xosc_dir = xosc_dir
         self.new_file_path_and_name = \
             os.path.join(cmaker_dir, xosc_dir, file_name + '.xosc')
@@ -187,10 +190,20 @@ class CarMakerUtils:
                                  output_dir=new_file_path_and_name,
                                  cmaker_dir=self.cmaker_dir)
 
+    def rd5_file_change(self):
+        # 接入rd5转换API
+        # 包含最终文件的输入路径
+        input_file_and_name = os.path.join(self.input_dir, self.file_name + '.xodr')
+        # 新文件需要存放到Data/Road目录下
+        new_file_path = os.path.join(self.cmaker_dir, self.rd5_dir)
+        # 包含最终文件的输出路径
+        new_file_path_and_name = os.path.join(new_file_path, self.file_name + '.rd5')
+        rd5_change.road_change(input_xodr_file_and_name=input_file_and_name,new_rd5_file_path_and_name=new_file_path_and_name)
     def carmaker_process(self, model_name, src=None):
         self.create_package()
         self.copy_readme()
         self.copy_xodr_and_osgb()
         self.copy_models(model_name)
         self.xosc_change(model_name)
+        self.rd5_file_change()
         # print("debug")
