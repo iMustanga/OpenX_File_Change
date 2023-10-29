@@ -18,13 +18,16 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         self.setupUi(self)
 
         self.prescan_select_input.clicked.connect(self.input_file)
-        self.prescan_select_input_dir.clicked.connect(self.input_dir)
         self.prescan_select_output.clicked.connect(self.prescan_input)
+        self.prescan_select_input_dir.clicked.connect(self.input_dir)
+        # self.new_file_name.textEdited.connect(new_name)
         self.to_prescan.clicked.connect(self.prescan_change)
         print("---------------分割线----------------")
         print("验证鼠标点击选择路径、目标安装目录，键盘输入新文件名称：")
 
     def input_file(self):
+        self.prescan_select_input.setEnabled(False)
+
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileNames(None, "选取文件",
                                                                    default_file.DEFAULT_INPUT_DATABASE,
                                                                    "All Files(*);;Text Files(*.txt)")
@@ -53,8 +56,12 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
             VALID.append(1)
         print("VALID: %s" % VALID)
 
+        self.prescan_select_input.setEnabled(True)
+
     # 2023.10.18 添加选择文件夹功能
     def input_dir(self):
+        self.prescan_select_input_dir.setEnabled(False)
+
         self.dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径",
                                                               default_file.DEFAULT_INPUT_DATABASE)
         inputs.clear()
@@ -68,7 +75,11 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
             VALID.append(2)
         print("VALID: %s" % VALID)
 
+        self.prescan_select_input_dir.setEnabled(True)
+
     def prescan_input(self):
+        self.prescan_select_output.setEnabled(False)
+
         directory = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择prescan文件夹路径",
                                                                "D:/PreScan/Experiment_place/import_actions/python_test")
         prescan_inputs.clear()
@@ -76,10 +87,38 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         self.prescan_show_output.setText(directory)
         print("prescan_inputs: %s" % prescan_inputs)
 
+        self.prescan_select_output.setEnabled(True)
+
     # 2023.10.11添加显示修改结果功能
     def show_result(self):
         msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示',
                                           '修改成功')
+
+    def prescan_readme(self):
+        with open(prescan_inputs[0] + '/' + 'Prescan_Readme.txt', mode='w') as prescan_readme_file:
+            prescan_readme_file.write('一、请按操作文档的要求在RoadRunner中构建OpenScenario场景并导出。\n \n')
+            prescan_readme_file.write('二、运行RoadRunner-Prescan场景转换软件完成指定xosc文件的转换后，需要使用MATLAB脚本导入Prescan。导入方法如下：\n \n')
+            prescan_readme_file.write('1.首先确保本机中含有Simcenter Prescan 2206软件；\n')
+            prescan_readme_file.write('2.在软件Experiment目录下新建文件路径，自定义命名，命名规则与其他文件夹相同。\n')
+            prescan_readme_file.write('3.使用Prescan Process Manager 2206控制台打开MATLAB，新建脚本文件，自定义文件名称并保存脚本文件至步骤2中创建的文件夹中。\n')
+            prescan_readme_file.write('4.在脚本文件中键入一下命令：\n \n')
+            prescan_readme_file.write('\t' + 'experiment = prescan.api.experiment.createExperiment(); % 创建实验\n \n')
+            prescan_readme_file.write('\t' + 'prescan.api.openscenario.importOpenScenarioFile(experiment, ''); % 导入OpenScenario文件，''内填入修改后的xosc文件路径 \n \n')
+            prescan_readme_file.write('\t' + 'experiment.scheduler.simulationSpeed = prescan.api.types.SimulationSpeed.WallClockSpeed; '
+                                      '% 让项目以墙上时钟速度运行\n \n')
+            prescan_readme_file.write('\t' + 'myViewer = prescan.api.viewer.createViewer(experiment); % 添加Prescan Viewer \n '
+                                      '\t' + 'myViewer.windowSettings.windowDecoration = true; \n \n')
+            prescan_readme_file.write('\t' + 'experiment.saveToFile(''); % 保存，''内填入pb文件名，格式为XX.pb\n \n')
+            prescan_readme_file.write('\t' + 'prescan.api.simulink.generate(); % 创建cs\n \n')
+            prescan_readme_file.write('三、若有添加传感器的需要，可以在脚本文件中添加一下命令： \n \n')
+            prescan_readme_file.write('\t' + 'for i = 1:numel(experiment.objects) \n ')
+            prescan_readme_file.write('\t' + '\t' + 'prescan.api.pcs.createPcsSensor(experiment.objects(i)); % 以导入Point Cloud Sensor为例\n \n')
+            prescan_readme_file.write('四、若需要配置传感器参数，如配置Point Cloud Sensor的分辨率，可以进行如下操作：\n \n')
+            prescan_readme_file.write('1.首先创建一个对象，如pcsensor：\n')
+            prescan_readme_file.write('\t' + 'pcsensor = prescan.api.pcs.createPcsSensor(experiment.objects(i));\n \n')
+            prescan_readme_file.write('2.然后赋值修改分辨率：\n')
+            prescan_readme_file.write('\t' + 'pcsensor.resolutionX = 630;\n')
+            prescan_readme_file.write('\t' + 'pcsensor.resolutionY = 125;\n')
 
     # 2023.10.17 封装获取主修改程序输入路径的代码
     def get_input_parameters_1(self, inputs):# 2023.10.17 给成员方法一个输入
@@ -113,70 +152,29 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
             print("进行了文件的多选")
             self.size = np.size(inputs)  # 2023.10.17 改成使用首文件的拓展名作为判断依据
             print("size: %s" % self.size)
-            file_name = os.path.basename(str(inputs[0][0]))
-            print("首文件文件名file_name: %s" % file_name)
-            port = os.path.splitext(file_name)
-            print("首文件拓展名port[1]: %s" % port[1])  # 为了得到首文件拓展名，用于判断输入的文件类型
 
-            if 'xosc' in port[1]:  # 只要首文件是xosc文件，就进行修改
-                not_xosc_list1 = []
-                if not prescan_inputs or all(element == '' for element in prescan_inputs):
-                    msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择目标路径')
-                else:
-                    if self.size > 1:
-                        print("多文件场景")
-                        # 方法一：
-                        # for i in range(self.size):
-                        #     self.get_input_parameters_1(str(inputs[0][i]))
-                        #     name_por = os.path.basename(str(inputs[0][i]))
-                        #     portion = os.path.splitext(name_por)
-                        #     if 'xosc' not in portion[1]:
-                        #         msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
-                        #                                           '以下文件不是xosc文件： ' + str(
-                        #                                               inputs[0][i]) + '.\n' + '点击ok继续')
-                        #         continue
-                        #     else:
-                        #         roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                        #                                                                           self.output_file)
-                        #         roadRunner_to_prescan.prescan_tranform()
-                        # print("No Bug!! Enjoy.")
-                        # print("----------------------------------分割线-----------------------------------------")
-                        # print("----------------------------------分割线-----------------------------------------")
-                        # self.show_result()
-                        # 方法二：
-                        for i in range(self.size):
-                            input_file_name3, expand_name2 = os.path.splitext(str(inputs[0][i]))
-                            if expand_name2 != '.xosc':
-                                input_file_name4 = input_file_name3 + expand_name2
-                                not_xosc_list1.append(input_file_name4)  # 记录文件夹中所有的非xosc文件
-                            else:
-                                self.get_input_parameters_1(str(inputs[0][i]))
-                                roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                                  self.output_file)
-                                roadRunner_to_prescan.prescan_tranform()
-                        print("非xosc文件列表： %s" % not_xosc_list1)
-                        self.show_result()
-
-                        if not_xosc_list1:
-                            file_string = '\n'.join(not_xosc_list1)
-                            msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
-                                                              '以下文件不是xosc文件，无法修改：\n' + file_string)
-
-                    else:
-                        print("单文件场景")
-                        self.get_input_parameters_1(str(inputs[0][0]))
+            if not prescan_inputs or all(element == '' for element in prescan_inputs):
+                msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择目标路径')
+            else:
+                if self.size > 1:
+                    print("多文件场景")
+                    for i in range(self.size):
+                        self.get_input_parameters_1(str(inputs[0][i]))
                         roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                          self.output_file)
+                                                                                              self.output_file)
                         roadRunner_to_prescan.prescan_tranform()
-                        print("No Bug!! Enjoy.")
-                        print("----------------------------------分割线-----------------------------------------")
-                        print("----------------------------------分割线-----------------------------------------")
-                        self.show_result()
-
-            elif port[1] != '.xosc':
-                msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
-                                                  '请谨慎选择需要修改的文件，暂不支持首文件不是xosc格式的多文件修改。以下文件不是xosc文件： ' + str(
-                                                      inputs[0][0]))
+                    print("No Bug!! Enjoy.")
+                    self.prescan_readme()
+                    self.show_result()
+                else:
+                    print("单文件场景")
+                    self.get_input_parameters_1(str(inputs[0][0]))
+                    roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
+                                                                                      self.output_file)
+                    roadRunner_to_prescan.prescan_tranform()
+                    print("No Bug!! Enjoy.")
+                    self.prescan_readme()
+                    self.show_result()
 
         elif VALID[0] == 2: # 如果VALID列表元素值为2，则进行文件夹修改功能，会识别文件夹内的xosc文件并修改，与此同时弹窗提示所有非xosc文件
             print("选择了文件夹")
@@ -184,47 +182,47 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
             if not prescan_inputs or all(element == '' for element in prescan_inputs):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择目标路径')
             else:
-                # self.get_input_parameters_2(self.dir_name)
                 file_list = os.listdir(self.dir_name)
-                new_file_name = os.path.basename(self.dir_name)     # 获得所选文件夹的文件夹名，作为新文件夹的文件夹名
+                new_file_name = os.path.basename(self.dir_name)  # 获得所选文件夹的文件夹名，作为新文件夹的文件夹名
                 print("所选文件夹里的文件列表： %s" % file_list)
                 print("新文件夹名： %s" % new_file_name)
-                new_file = prescan_inputs[0] + '/' + new_file_name # 得到新文件夹路径
+                new_file = prescan_inputs[0] + '/' + new_file_name  # 得到新文件夹路径
                 print("新文件夹路径：%s" % new_file)
-                os.mkdir(new_file) # 创建与所选文件夹同名的新文件夹
 
-                for file_name in file_list: # 遍历所选文件夹
-                    file_name1, expand_name = os.path.splitext(file_name)
-                    if expand_name != '.xosc':
-                        not_xosc_list2.append(file_name) # 记录文件夹中所有的非xosc文件
+                # 2023.10.25 添加功能：先判断目标路径是否有同名文件夹，是则弹窗警告，否则创建文件夹
+                if new_file_name in os.listdir(prescan_inputs[0]):
+                    msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告',
+                                                  '想要创建的文件夹已存在于该目标路径，请先删除该文件夹。')
+                else:
+                    os.mkdir(new_file)  # 创建与所选文件夹同名的新文件夹
+                    for file_name in file_list:  # 遍历所选文件夹
+                        file_name1, expand_name = os.path.splitext(file_name)
+                        if expand_name != '.xosc':
+                            not_xosc_list2.append(file_name)  # 记录文件夹中所有的非xosc文件
 
+                        else:
+                            self.input_file = self.dir_name + '/' + file_name1 + '.xosc'
+                            self.output_file = new_file + '/' + file_name1 + '.xosc'
+                            roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
+                                                                                              self.output_file)
+                            roadRunner_to_prescan.prescan_tranform()
+
+                    print("非xosc文件列表： %s" % not_xosc_list2)
+                    self.show_result()
+                    self.prescan_readme()
+
+                    num_list = len(file_list)
+                    print("文件夹中含有的文件数量：%s" % num_list)
+                    num_not_xosc_list2 = len(not_xosc_list2)
+                    print("文件夹中含有的非xosc文件数量：%s" % num_not_xosc_list2)
+
+                    if not_xosc_list2:
+                        self.file_string2 = '\n'.join(not_xosc_list2)
+                        with open(new_file + '/' + '备注.txt', mode='w') as f:
+                            f.write('以下文件不是xosc文件，无法修改：\n' + self.file_string2)
                     else:
-                        self.input_file = self.dir_name + '/' + file_name1 + '.xosc'
-                        self.output_file = new_file + '/' + file_name1 + '.xosc'
-                        roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                          self.output_file)
-                        roadRunner_to_prescan.prescan_tranform()
-
-                print("非xosc文件列表： %s" % not_xosc_list2)
-                self.show_result()
-
-                # 用窗口的方式显示所选文件夹中所有非xosc文件
-                #方法一：
-                # not_xosc_list_dir = []
-                # num3 = len(not_xosc_list)
-                # for i in range(num3):
-                #     a = self.dir_name + '/' + not_xosc_list[i]
-                #     not_xosc_list_dir.append(a)
-                #
-                # print("not_xosc_list_dir: %s" % not_xosc_list_dir)
-                #
-                # file_string = '\n'.join(not_xosc_list_dir)
-                # msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告',
-                #                               '在所选文件夹中，以下文件不是xosc文件，无法进行修改：' + file_string)
-                # 方法二：
-                if not_xosc_list2:
-                    file_string = '\n'.join(not_xosc_list2)
-                    msg_box = QMessageBox.information(QtWidgets.QWidget(), '警告', '在所选文件夹' + self.dir_name + '中，以下文件不是xosc文件，无法修改：\n' + file_string)
+                        with open(new_file + '/' + '备注.txt', mode='w') as f:
+                            f.write('在所选文件夹' + self.dir_name + '中，总共包含' + str(num_list) + '个文件，全部文件均以修改为Prescan可用的格式。')
 
 
 
