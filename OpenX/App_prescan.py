@@ -9,6 +9,125 @@ from window.window_prescan import Ui_window_prescan
 inputs = []
 prescan_inputs = []
 VALID = []
+files = []
+dir_list = []
+
+class SelectDir(QWidget):
+    def __init__(self, files, directory, interact):
+        super().__init__()
+        self.directory = directory
+        self.files = files
+        # self.dir_list = []
+
+        self.setWindowTitle('请勾选包含xosc文件的文件夹')
+        self.setGeometry(200, 200, 500, 600)
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # 创建滚动区域
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)  # 允许滚动区域内的小部件调整大小
+
+        scroll_widget = QWidget()
+        scroll_area.setWidget(scroll_widget)
+
+        selectbox = QGridLayout()
+        scroll_widget.setLayout(selectbox)
+
+        self.file_checkboxes = {}
+        self.selected_files = ""
+
+        for file in self.files:
+            checkbox = QCheckBox(file)
+            checkbox.stateChanged.connect(self.onCheckboxStateChanged)
+            # 字体大小
+            font = checkbox.font()
+            font.setPointSize(10)
+            checkbox.setFont(font)
+            selectbox.addWidget(checkbox, self.files.index(file) // 2, self.files.index(file) % 2)
+            self.file_checkboxes[file] = checkbox
+
+        button_layout = QVBoxLayout()
+        select_all_button = QPushButton('全选')
+        select_all_button.clicked.connect(self.selectAll)
+        button_layout.addWidget(select_all_button)
+        select_none_button = QPushButton('取消全选')
+        select_none_button.clicked.connect(self.selectNon)
+        button_layout.addWidget(select_none_button)
+        confirm_button = QPushButton('确认')
+        confirm_button.clicked.connect(lambda: self.confirm(interact))
+        button_layout.addWidget(confirm_button)
+
+        # 创建一个搜索输入框
+        search_layout = QHBoxLayout()
+        self.search_input = QLineEdit()
+        self.search_input.textChanged.connect(self.filterFiles)
+        search_label = QLabel("请输入需要查找的文件夹名称：")
+        search_label.setBuddy(self.search_input)
+        search_layout.addWidget(search_label)
+        search_layout.addWidget(self.search_input)
+
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(search_layout)
+        main_layout.addWidget(scroll_area)
+        main_layout.addLayout(button_layout)
+        self.setLayout(main_layout)
+
+    def onCheckboxStateChanged(self, state):
+        sender = self.sender()
+        for file, checkbox in self.file_checkboxes.items():
+            if checkbox == sender:
+                if state == 2:  # 选中
+                    # 将选中文件夹的路径存入列表dir_list
+                    dir_list.append(self.directory + '/' + file)
+                else:
+                    # 将取消选中文件夹的路径从列表dir_list中删除
+                    dir_list.remove(self.directory + '/' + file)
+
+    def selectAll(self):
+        for file, checkbox in self.file_checkboxes.items():
+            checkbox.setChecked(True)
+
+    def selectNon(self):
+        for file, checkbox in self.file_checkboxes.items():
+            checkbox.setChecked(False)
+
+    def confirm(self, interact):
+        file_fir1 = []
+        print("dir_list: %s" % dir_list)
+        num1 = len(dir_list)
+
+        if num1 == 0:
+            msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '没有做任何勾选')
+        else:
+            for i in range(num1):
+                dir1 = os.path.basename(dir_list[i])
+                file_fir1.append(dir1)
+
+            file_fir = interact.dir_name + '/' + file_fir1[0]
+
+            for dir in file_fir1:
+                if dir == file_fir1[0]:
+                    continue
+                else:
+                    file_fir2 = file_fir + '+' + dir
+                    file_fir = file_fir2
+
+            interact.prescan_show_input.setText(str(file_fir))
+            self.close()
+            # interact.prescan_select_input_dir.setEnabled(True)
+
+        # interact.ui.select_input_dir.setEnabled(True)
+
+    def filterFiles(self):
+        search_text = self.search_input.text().lower()
+        for file, checkbox in self.file_checkboxes.items():
+            if search_text in file.lower():
+                checkbox.setVisible(True)
+            else:
+                checkbox.setVisible(False)
 
 class presc_change(QtWidgets.QWidget, Ui_window_prescan):
 
@@ -30,9 +149,10 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
 
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileNames(None, "选取文件",
                                                                    default_file.DEFAULT_INPUT_DATABASE,
-                                                                   "All Files(*);;Text Files(*.txt)")
+                                                                   "Text Files(*.xosc)")
         inputs.clear()
         VALID.clear()
+
         inputs.append(fileName)
         print("filename: %s" % fileName)
         print("inputs: %s" % inputs)
@@ -62,18 +182,25 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
     def input_dir(self):
         self.prescan_select_input_dir.setEnabled(False)
 
-        self.dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径",
+        self.dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹",
                                                               default_file.DEFAULT_INPUT_DATABASE)
-        inputs.clear()
+
         VALID.clear()
-        inputs.append(self.dir_name)
-        self.prescan_show_input.setText(self.dir_name)
-        print("dirname: %s" % self.dir_name)
-        print("inputs: %s" % inputs)
-        # 2023.10.19 使用os.path.isdir识别文件夹选择功能
-        if os.path.isdir(self.dir_name):
-            VALID.append(2)
-        print("VALID: %s" % VALID)
+        dir_list.clear()
+
+        if self.dir_name:
+            # 2023.11.1 实现勾选文件夹功能，使用二级弹窗
+            self.files = [f for f in os.listdir(self.dir_name) if os.path.isdir(os.path.join(self.dir_name, f))]
+            self.select_dir = SelectDir(self.files, self.dir_name, self)
+            self.select_dir.show()
+
+            print("dirname: %s" % self.dir_name)
+            print("files: %s" % self.files)
+
+            # 2023.10.19 使用os.path.isdir识别文件夹选择功能
+            if os.path.isdir(self.dir_name):
+                VALID.append(2)
+            print("VALID: %s" % VALID)
 
         self.prescan_select_input_dir.setEnabled(True)
 
@@ -178,51 +305,80 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
 
         elif VALID[0] == 2: # 如果VALID列表元素值为2，则进行文件夹修改功能，会识别文件夹内的xosc文件并修改，与此同时弹窗提示所有非xosc文件
             print("选择了文件夹")
+
             not_xosc_list2 = []
+            new_file_name_exist_list = []
+
             if not prescan_inputs or all(element == '' for element in prescan_inputs):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择目标路径')
             else:
-                file_list = os.listdir(self.dir_name)
-                new_file_name = os.path.basename(self.dir_name)  # 获得所选文件夹的文件夹名，作为新文件夹的文件夹名
-                print("所选文件夹里的文件列表： %s" % file_list)
-                print("新文件夹名： %s" % new_file_name)
-                new_file = prescan_inputs[0] + '/' + new_file_name  # 得到新文件夹路径
-                print("新文件夹路径：%s" % new_file)
+                len1 = len(dir_list)
+                for i in range(len1):
+                    file_list = os.listdir(dir_list[i])
+                    new_file_name = os.path.basename(dir_list[i])  # 获得所选文件夹的文件夹名，作为新文件夹的文件夹名
+                    print("所选文件夹里的文件列表： %s" % file_list)
+                    print("新文件夹名： %s" % new_file_name)
+                    new_file = prescan_inputs[0] + '/' + new_file_name  # 得到新文件夹路径
+                    print("新文件夹路径：%s" % new_file)
 
-                # 2023.10.25 添加功能：先判断目标路径是否有同名文件夹，是则弹窗警告，否则创建文件夹
-                if new_file_name in os.listdir(prescan_inputs[0]):
-                    msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告',
-                                                  '想要创建的文件夹已存在于该目标路径，请先删除该文件夹。')
-                else:
-                    os.mkdir(new_file)  # 创建与所选文件夹同名的新文件夹
-                    for file_name in file_list:  # 遍历所选文件夹
-                        file_name1, expand_name = os.path.splitext(file_name)
-                        if expand_name != '.xosc':
-                            not_xosc_list2.append(file_name)  # 记录文件夹中所有的非xosc文件
-
-                        else:
-                            self.input_file = self.dir_name + '/' + file_name1 + '.xosc'
-                            self.output_file = new_file + '/' + file_name1 + '.xosc'
-                            roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                              self.output_file)
-                            roadRunner_to_prescan.prescan_tranform()
-
-                    print("非xosc文件列表： %s" % not_xosc_list2)
-                    self.show_result()
-                    self.prescan_readme()
-
-                    num_list = len(file_list)
-                    print("文件夹中含有的文件数量：%s" % num_list)
-                    num_not_xosc_list2 = len(not_xosc_list2)
-                    print("文件夹中含有的非xosc文件数量：%s" % num_not_xosc_list2)
-
-                    if not_xosc_list2:
-                        self.file_string2 = '\n'.join(not_xosc_list2)
-                        with open(new_file + '/' + '备注.txt', mode='w') as f:
-                            f.write('以下文件不是xosc文件，无法修改：\n' + self.file_string2)
+                    # 2023.10.25 添加功能：先判断目标路径是否有同名文件夹，是则弹窗警告，否则创建文件夹
+                    # 2023.11.3 完善在多选文件夹时识别到有同名文件夹时的提示功能
+                    if new_file_name in os.listdir(prescan_inputs[0]):
+                        new_file_name_exist_list.append(new_file_name)
+                        continue
                     else:
-                        with open(new_file + '/' + '备注.txt', mode='w') as f:
-                            f.write('在所选文件夹' + self.dir_name + '中，总共包含' + str(num_list) + '个文件，全部文件均以修改为Prescan可用的格式。')
+                        os.mkdir(new_file)  # 创建与所选文件夹同名的新文件夹
+                        for file_name in file_list:  # 遍历所选文件夹
+                            file_name1, expand_name = os.path.splitext(file_name)
+                            if expand_name != '.xosc':
+                                not_xosc_list2.append(file_name)  # 记录文件夹中所有的非xosc文件
+
+                            else:
+                                self.input_file = dir_list[i] + '/' + file_name1 + '.xosc'
+                                self.output_file = new_file + '/' + file_name1 + '.xosc'
+                                roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
+                                                                                                  self.output_file)
+                                roadRunner_to_prescan.prescan_tranform()
+
+                        if not os.path.exists('RoadRunner导出的xosc文件导入Prescan的操作方法.txt'):
+                            self.prescan_readme()
+                        # copy('Prescan格式转换工具使用指南.pdf', prescan_inputs[0])
+
+                        print("非xosc文件列表： %s" % not_xosc_list2)
+                        num_list = len(file_list)
+                        print("文件夹中含有的文件数量：%s" % num_list)
+                        num_not_xosc_list2 = len(not_xosc_list2)
+                        print("文件夹中含有的非xosc文件数量：%s" % num_not_xosc_list2)
+
+                        if not_xosc_list2:
+                            self.file_string2 = '\n'.join(not_xosc_list2)
+                            # 2023.10.25 创建文本文件，将弹窗信息写入其中，看与否决定权交回给用户
+                            with open(new_file + '/' + 'readme.txt', mode='w') as f:
+                                f.write('以下文件不是xosc文件，无法修改：\n' + self.file_string2)
+                        else:
+                            with open(new_file + '/' + 'readme.txt', mode='w') as f:
+                                f.write('在所选文件夹' + self.dir_name + '中，总共包含' + str(
+                                    num_list) + '个文件，全部文件均以修改为Prescan可用的格式。')
+
+                # 2023.11.3 完善在多选文件夹时识别到有同名文件夹时的提示功能
+                len2 = len(new_file_name_exist_list)
+                if len2 == 0:
+                    self.show_result()
+                elif len2 == 1:
+                    msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告',
+                                                  '想要创建的名为' + new_file_name_exist_list[
+                                                      0] + '的文件夹已存在于该目标路径，请先删除路径中的同名文件夹。')
+                else:
+                    new_file_name_exist_list_string = ', '.join(new_file_name_exist_list)
+                    msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告',
+                                                  '想要创建的名为' + new_file_name_exist_list_string + '的文件夹已存在于该目标路径，请先删除路径中的同名文件夹。')
+
+
+
+
+
+
+
 
 
 
