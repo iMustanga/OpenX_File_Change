@@ -30,7 +30,9 @@ DEFAULT_CASE_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\database"
 DEFAULT_REPORT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\Carmaker_VehicleSensor"
 DEFAULT_RANGE_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\output"
 DEFAULT_ROADRUNNER_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\soft_path.txt"
-DEFAULT_DWC_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\dwc.txt"
+DEFAULT_DWC_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\DWC.txt"
+DEFAULT_TRS_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS.txt"
+DEFAULT_TRS_CHECK_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS_Check.txt"
 '''
 
 # linux
