@@ -28,27 +28,33 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         self.select_software_dir.clicked.connect(self.get_soft_dir)
         self.open_software.clicked.connect(self.open_roadrunner)
 
+        # 案例下载次数统计
         # self.case_down.clicked.connect(self.case_update)
         self.case_down.clicked.connect(self.download_time_cont)
+        self.download_time_cont()
 
+        # 测试里程统计
+        # self.range.clicked.connect(self.range_update)test_range_stat
+        self.range.clicked.connect(self.test_range_stat)
+        self.test_range_stat()
+
+        # 测试报告获取
         self.report.clicked.connect(self.report_update)
-        self.range.clicked.connect(self.range_update)
 
         '''# 设置打开页面即进行案例下载显示
         self.case_download_show.clear()
         openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
         self.case_download_show.addItems(openx_case)'''
-        self.download_time_cont()
 
         # 设置打开页面即进行测试报告显示
         self.report_show.clear()
         report = os.listdir(default_file.DEFAULT_REPORT_DIR)
         self.report_show.addItems(report)
 
-        # 设置打开页面即进行测试里程显示
+        '''# 设置打开页面即进行测试里程显示
         self.range_show.clear()
         range_dis = os.listdir(default_file.DEFAULT_RANGE_DIR)
-        self.range_show.addItems(range_dis)
+        self.range_show.addItems(range_dis)'''
 
     def show_vtd(self):
         self.vtd_window = App_vtd.vtd_change()
@@ -61,6 +67,136 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
     def show_prescan(self):
         self.prescan_window = App_prescan.presc_change()
         self.prescan_window.show()
+
+    def test_range_stat(self):
+        trs_dir = os.path.abspath(os.path.dirname(os.getcwd())) + "\\log"
+
+        # 新建文件存储数据
+        if not os.path.exists(default_file.DEFAULT_TRS_SOFT_DIR):
+            trs_make = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
+            trs_make.write('测试总里程： 0m \n')
+            trs_make.close()
+        if not os.path.exists(default_file.DEFAULT_TRS_CHECK_SOFT_DIR):
+            trs_check = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='w')
+            trs_check.close()
+
+        # 对文件夹内文件进行遍历
+        range_log = os.listdir(trs_dir)
+        done_file = []
+        # print(range_log)
+        for log in range_log:
+            portion = os.path.splitext(log)
+            done_file = []
+            done_sta = 0
+            # 后缀为.log文件时进行遍历
+            if 'log' in portion[1]:
+                # 验证是否遍历过该文件
+                done_check = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='r')
+                for check in open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='r'):
+                    if log in check:
+                        done_sta = 1
+                done_check.close()
+
+                if done_sta == 0:
+
+                    # 将当前遍历文件的文件名写入已遍历文件存储
+                    done_file.append(log)
+                    done_write = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='a')
+                    for done in done_file:
+                        done_write.write(done + '\n')
+                    done_write.close()
+
+                    # 读取场景名称以及测试距离
+                    trs_read = open(trs_dir + '\\' + log, mode='r')
+                    for line in open(trs_dir + '\\' + log, mode='r'):
+                        if 'SIM_END' in line:
+                            # sim_range = line.replace('SIM_END', '')
+                            sim_range = []
+                            line_m = 0
+                            line_s = 0
+                            line_na0 = 0
+                            line_na1 = 0
+                            text_len = len(line) - 1
+                            print(line)
+                            for i in range(text_len, -1, -1):
+                                if 'm' in line[i]:
+                                    if line_m == 0:
+                                        line_m = i
+
+                                if 's' in line[i]:
+                                    if line_s == 0:
+                                        line_s = i
+
+                                if '	' in line[i]:
+                                    if not line_na1 == 0:
+                                        if line_na0 == 0:
+                                            # print('blank0')
+                                            line_na0 = i
+
+                                if '	' in line[i]:
+                                    # print('blank')
+                                    if not line_s == 0:
+                                        if line_na1 == 0:
+                                            # print('blank1')
+                                            line_na1 = i
+
+
+
+                            # sim_range.append(line[i])
+                            sim_range_mid = line[line_s+2:line_m]
+                            sim_range = sim_range_mid.replace('	', '')
+                            sim_range = float(sim_range)
+                            # print(sim_range)
+
+                            sim_name = line[line_na0:line_na1]
+                            sim_name = sim_name.replace('	', '')
+                            # print(sim_name)
+
+                            # 若距离不为0 且场景名称不为空则写入数据
+                            if not sim_range == 0:
+                                if ' ' not in sim_name:
+                                    openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
+                                    if sim_name in openx_case:
+
+                                        # 总里程统计
+                                        total_temp = []
+                                        trs_total_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+                                        for tol_ran in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+                                            if '总里程' in tol_ran:
+                                                total_range = tol_ran.replace('测试总里程：', '')
+                                                total_range = total_range.replace('m', '')
+                                                total_range = total_range.replace(' ', '')
+                                                total_range = total_range.replace('\n', '')
+                                                cont_total = float(total_range)
+                                                new_total = cont_total + sim_range
+                                                total_temp.append('测试总里程： ' + str(new_total) + 'm \n')
+                                                line = next(trs_total_read)
+                                            else:
+                                                total_temp.append(trs_total_read.readline())
+                                        trs_total_read.close()
+
+                                        trs_total_write = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
+                                        for total in total_temp:
+                                            trs_total_write.writelines(total)
+                                        trs_total_write.close()
+
+                    trs_read.close()
+                    # name_ck = line[0:j]
+
+        # 调用数据到显示框
+        trs_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+        trs_info = []
+        for line in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+            line_info = line.replace('\n', '')
+            # line_name = line_info.replace(' 下载次数：', '')
+            # line_name = line_name.replace()
+            trs_info.append(line_info)
+        trs_read.close()
+        # print(dwc_info)
+        self.range_show.clear()
+        self.range_show.addItems(trs_info)
+
+
 
     def download_time_cont(self):
         dwc_dir = default_file.DEFAULT_DWC_SOFT_DIR
@@ -105,6 +241,40 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
             for line in dwc_af:
                 dwc_write.write(line)
             dwc_write.close()
+
+            name_set = 0
+            dwc_st = []
+            dwc_check = open(dwc_dir, mode='r')
+            for line in open(dwc_dir, mode='r'):
+                j = 0
+                for i in line:
+                    if i == ' ':
+
+                        name_ck = line[0:j]
+                        name_in = str(name_ck)
+                        for case in openx_case:
+                            # name_in = str(name_ck)
+                            if name_in in case:
+                                # print(name_in)
+                                name_set = 1
+                                # print(i)
+                    j = j + 1
+
+                if name_set == 0:
+                    # line = next(dwc_file)
+                    
+                    print('min')
+                    name_set = 0
+                else:
+                    dwc_st.append(dwc_check.readline())
+                    # print(dwc_st)
+                    name_set = 0
+            dwc_check.close()
+
+            dwc_min = open(dwc_dir, mode='w')
+            for line in dwc_st:
+                dwc_min.write(line)
+            dwc_min.close()
 
         # self.download_time_add('C4_4ac.xosc')
         # cont_time = 0
