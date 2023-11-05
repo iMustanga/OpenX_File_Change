@@ -13,6 +13,99 @@ import App_main
 # 2023.09.18 封装到类 并独立为一个文件
 # 2023.09.18 增加点击按钮更新车辆模型以及传感器模型的显示
 
+# 11.2增加勾选多文件夹
+class SelectDir(QWidget):
+    def __init__(self, files, directory, interact):
+        super().__init__()
+        self.directory = directory
+        self.files = files
+        self.dir_list = []
+
+        self.setWindowTitle('请选择包含xosc文件的文件夹')
+        self.setGeometry(100, 100, 500, 550)
+        qr = self.frameGeometry()
+        cp = QDesktopWidget().availableGeometry().center()
+        qr.moveCenter(cp)
+        self.move(qr.topLeft())
+
+        # 创建滚动区域
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)  # 允许滚动区域内的小部件调整大小
+
+        scroll_widget = QWidget()
+        scroll_area.setWidget(scroll_widget)
+
+        selectbox = QGridLayout()
+        scroll_widget.setLayout(selectbox)
+
+        self.file_checkboxes = {}
+        self.selected_files = ""
+
+        for file in self.files:
+            checkbox = QCheckBox(file)
+            checkbox.stateChanged.connect(self.onCheckboxStateChanged)
+            # 字体大小
+            font = checkbox.font()
+            font.setPointSize(10)
+            checkbox.setFont(font)
+            selectbox.addWidget(checkbox, self.files.index(file) // 2, self.files.index(file) % 2)
+            self.file_checkboxes[file] = checkbox
+
+        button_layout = QVBoxLayout()
+        select_all_button = QPushButton('全选')
+        select_all_button.clicked.connect(self.selectAll)
+        button_layout.addWidget(select_all_button)
+        select_none_button = QPushButton('取消全选')
+        select_none_button.clicked.connect(self.selectNon)
+        button_layout.addWidget(select_none_button)
+        confirm_button = QPushButton('确认')
+        confirm_button.clicked.connect(lambda: self.confirm(interact))
+        button_layout.addWidget(confirm_button)
+
+        # 创建一个搜索输入框
+        search_layout = QVBoxLayout()
+        self.search_input = QLineEdit()
+        self.search_input.textChanged.connect(self.filterFiles)
+        search_layout.addWidget(self.search_input)
+
+        main_layout = QVBoxLayout()
+        main_layout.addLayout(search_layout)
+        main_layout.addWidget(scroll_area)
+        main_layout.addLayout(button_layout)
+        self.setLayout(main_layout)
+
+    def onCheckboxStateChanged(self, state):
+        sender = self.sender()
+        for file, checkbox in self.file_checkboxes.items():
+            if checkbox == sender:
+                if state == 2:  # 选中
+                    # 将选中文件夹的路径存入列表dir_list
+                    self.dir_list.append(os.path.join(self.directory, file))
+                else:
+                    # 将取消选中文件夹的路径从列表dir_list中删除
+                    self.dir_list.remove(os.path.join(self.directory, file))
+
+    def selectAll(self):
+        for file, checkbox in self.file_checkboxes.items():
+            checkbox.setChecked(True)
+
+    def selectNon(self):
+        for file, checkbox in self.file_checkboxes.items():
+            checkbox.setChecked(False)
+
+    def confirm(self, interact):
+        interact.vtd_show_input.setText(str(self.dir_list))
+        vtd_change.vtd_inputs = self.dir_list
+        self.close()
+
+    def filterFiles(self):
+        search_text = self.search_input.text().lower()
+        for file, checkbox in self.file_checkboxes.items():
+            if search_text in file.lower():
+                checkbox.setVisible(True)
+            else:
+                checkbox.setVisible(False)
+
 class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
     vtd_inputs = []
@@ -27,7 +120,9 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     veh_model_name = []
     sensor_model_name = []
     vtd_out_check = []
+    file_ic = []
     vtd_input_con = 0
+    vtd_mult_sta = 0
     # 程序所支持的车辆/动作数量
     vtd_act_support = 100
     vtd_time_arr = np.zeros((vtd_act_support, vtd_act_support))
@@ -45,7 +140,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         self.vtd_input_4.clicked.connect(self.vtd_select_input_dir)
         self.vtd_select_output.clicked.connect(self.vtd_output_file)
         # self.to_vtd.clicked.connect(self.vtd_openx_change)
-        self.to_vtd.clicked.connect(self.vtd_ergodic)
+        self.to_vtd.clicked.connect(self.vtd_ergodic_mult)
         self.vtd_vehicle_model_select.clicked.connect(self.vehicle_update)
         self.vtd_sensor_select.clicked.connect(self.sensor_update)
 
@@ -60,15 +155,15 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         self.vtd_sensor_show.addItems(vtd_sensor)
 
     def vtd_ergodic(self):
+
         self.to_vtd.setEnabled(False)
         stri = '\n'
         sta = 1
         tls = 1
-        file_ic = []
+        # file_ic = []
 
         size_input = np.size(vtd_change.vtd_inputs)
         # print(size_input)
-
 
         if size_input > 1:
             file_name = os.path.basename(str(vtd_change.vtd_inputs[0][0]))
@@ -101,7 +196,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                         else:
                             # print("error")
                             # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + str(vtd_change.vtd_inputs[0][i]))
-                            file_ic.append(vtd_change.vtd_inputs[0][i])
+                            vtd_change.file_ic.append(vtd_change.vtd_inputs[0][i])
                     sta = 0
 
                         # print(i)
@@ -119,7 +214,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                     else:
                         # print("error")
                         # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + str(vtd_change.vtd_inputs[0][0]))
-                        file_ic.append(vtd_change.vtd_inputs[0][0])
+                        vtd_change.file_ic.append(vtd_change.vtd_inputs[0][0])
                     sta = 0
 
             elif port[1] == '':
@@ -145,7 +240,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                             # print("error")
                             # print(vtd_change.vtd_input_dir)
                             # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + vtd_change.vtd_input_dir)
-                            file_ic.append(vtd_change.vtd_input_dir)
+                            vtd_change.file_ic.append(vtd_change.vtd_input_dir)
                         sta = 0
                 else:
                     msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
@@ -162,18 +257,93 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                 # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                 #                                  default_file.DISPLAY_WARN_INPUT_FORMAT + str(
                 #                                      vtd_change.vtd_inputs[0][0]))
-        if not vtd_change.vtd_out_check == []:
-            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
-                                            default_file.DiSPLAY_SUCESS_XOSC + '\n' + stri.join(vtd_change.vtd_out_check))
-            vtd_change.vtd_out_check = []
-        vtd_change.vtd_out_check = []
-        if not file_ic == []:
-            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
-                                              default_file.DISPLAY_WARN_INPUT_FORMAT + '\n' + stri.join(file_ic))
-            file_ic = []
-        file_ic = []
+            if vtd_change.vtd_mult_sta == 0:
+                # 将转出结果写成txt文件存储
+                file_log_dir = stri.join(vtd_change.vtd_outputs) + '/' + 'Output_Log.txt'
+                if not os.path.exists(file_log_dir):
+                    log_write = open(file_log_dir, mode='w')
+                    log_write.write('导出成功文件： \n')
+
+                    for line in vtd_change.vtd_out_check:
+                        log_write.write(line + '\n')
+
+                    log_write.write(' \n')
+                    log_write.write('以下文件不是场景文件，导出失败： \n')
+
+                    for lines in vtd_change.file_ic:
+                        log_write.write(lines + '\n')
+                    log_write.close()
+                else:
+                    print(file_log_dir)
+                    os.remove(file_log_dir)
+                    log_write = open(file_log_dir, mode='w')
+                    log_write.write('导出成功文件： \n')
+
+                    for line in vtd_change.vtd_out_check:
+                        log_write.write(line + '\n')
+
+                    log_write.write(' \n')
+                    log_write.write('以下文件不是场景文件，导出失败： \n')
+
+                    for lines in vtd_change.file_ic:
+                        log_write.write(lines + '\n')
+                    log_write.close()
+
+                if not vtd_change.vtd_out_check == []:
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
+                                                      '修改成功！')
+
+                vtd_change.vtd_out_check = []
+                vtd_change.file_ic = []
         self.clear_vtd_dir()
         self.to_vtd.setEnabled(True)
+
+    # 多文件夹遍历vtd_erogdic函数
+    def vtd_ergodic_mult(self):
+        stri = '\n'
+        vtd_change.vtd_mult_sta = 1
+
+        input_dirs = list(vtd_change.vtd_inputs)
+        for input_dir in input_dirs:
+            vtd_change.vtd_inputs.clear()
+            vtd_change.vtd_inputs.append(input_dir)
+            self.vtd_ergodic()
+        file_log_dir = stri.join(vtd_change.vtd_outputs) + '/' + 'Output_Log.txt'
+        if not os.path.exists(file_log_dir):
+            log_write = open(file_log_dir, mode='w')
+            log_write.write('导出成功文件： \n')
+
+            for line in vtd_change.vtd_out_check:
+                log_write.write(line + '\n')
+
+            log_write.write(' \n')
+            log_write.write('以下文件不是场景文件，导出失败： \n')
+
+            for lines in vtd_change.file_ic:
+                log_write.write(lines + '\n')
+            log_write.close()
+        else:
+            print(file_log_dir)
+            os.remove(file_log_dir)
+            log_write = open(file_log_dir, mode='w')
+            log_write.write('导出成功文件： \n')
+
+            for line in vtd_change.vtd_out_check:
+                log_write.write(line + '\n')
+
+            log_write.write(' \n')
+            log_write.write('以下文件不是场景文件，导出失败： \n')
+
+            for lines in vtd_change.file_ic:
+                log_write.write(lines + '\n')
+            log_write.close()
+
+        if not vtd_change.vtd_out_check == []:
+            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_SUCESS,
+                                              '修改成功！')
+
+        vtd_change.vtd_out_check = []
+        vtd_change.file_ic = []
 
 
     # xosc文件修改主函数
@@ -221,7 +391,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
 
         # fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件",default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
         # fileName = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
-        fileName, fileType = QtWidgets.QFileDialog.getOpenFileNames(None, "选取文件", default_file.DEFAULT_INPUT_DATABASE,"All Files(*);;Text Files(*.txt)")
+        fileName, fileType = QtWidgets.QFileDialog.getOpenFileNames(None, "选取文件", default_file.DEFAULT_INPUT_DATABASE,"xosc Files(*.xosc)")
         vtd_change.vtd_inputs.clear()
         vtd_change.vtd_inputs.append(fileName)
         scu = np.size(vtd_change.vtd_inputs)
@@ -242,18 +412,25 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         self.vtd_input_4.setEnabled(True)
 
     def vtd_select_input_dir(self):
-        self.vtd_input.setEnabled(False)
-        self.vtd_input_4.setEnabled(False)
+        directory = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径",
+                                                                 default_file.DEFAULT_INPUT_DATABASE)
+        if directory:
+            # 获取文件夹中的子文件夹名
+            files = [f for f in os.listdir(directory) if os.path.isdir(os.path.join(directory, f))]
+            self.select_dir = SelectDir(files, directory, self)
+            self.select_dir.show()
 
-
-        dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
-        vtd_change.vtd_inputs.clear()
-        vtd_change.vtd_inputs.append(dir_name)
-        self.vtd_show_input.setText(dir_name)
-
-        self.vtd_input.setEnabled(True)
-        self.vtd_input_4.setEnabled(True)
-
+    # def vtd_select_input_dir(self):
+    #     self.vtd_input.setEnabled(False)
+    #     self.vtd_input_4.setEnabled(False)
+    #
+    #     dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
+    #     vtd_change.vtd_inputs.clear()
+    #     vtd_change.vtd_inputs.append(dir_name)
+    #     self.vtd_show_input.setText(dir_name)
+    #
+    #     self.vtd_input.setEnabled(True)
+    #     self.vtd_input_4.setEnabled(True)
 
     # 获取输出文件夹路径
     def vtd_output_file(self):
@@ -265,7 +442,6 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         vtd_change.vtd_outputs.append(directory)
         self.vtd_show_output.setText(directory)
         self.vtd_select_output.setEnabled(True)
-
 
     # 获取所需要的各种路径及文件名
     def get_vtd_dir(self):
