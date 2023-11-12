@@ -6,6 +6,8 @@ import Xml_change_followtrajectory
 import Xml_change_dur
 import Xml_changetools
 import rd5_change
+import Log_Output
+import socket
 # 2023.09.13 移除了对xosc文件进行改名的功能
 
 class CarMakerUtils:
@@ -199,6 +201,10 @@ class CarMakerUtils:
         # 包含最终文件的输出路径
         new_file_path_and_name = os.path.join(new_file_path, self.file_name + '.rd5')
         rd5_change.road_change(input_xodr_file_and_name=input_file_and_name,new_rd5_file_path_and_name=new_file_path_and_name)
+
+    def Log_dir(self):
+        Log_Output.write_dir_path_to_file(self.cmaker_dir+'/SimOutput/{}/Log'.format(socket.gethostname()))
+
     def carmaker_process(self, model_name, src=None):
         self.create_package()
         self.copy_readme()
@@ -206,4 +212,5 @@ class CarMakerUtils:
         self.copy_models(model_name)
         self.xosc_change(model_name)
         self.rd5_file_change()
+        self.Log_dir()
         # print("debug")
