@@ -10,7 +10,7 @@ def write_dir_path_to_file(directory):
     # 获取目录的绝对路径
     directory = os.path.abspath(directory)
     # 在目录下创建一个名为dir_path.txt的文件，打开它并写入目录路径
-    output_file = os.path.join(default_file.DEFAULT_LOG_DIR, "dir_path.txt")
+    output_file = default_file.DEFAULT_LOG_DIR
     with open(output_file, "w") as file:
         file.write(directory + "\n")
     # 打印出成功信息和文件路径

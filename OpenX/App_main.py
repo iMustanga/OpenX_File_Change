@@ -41,20 +41,10 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         # 测试报告获取
         self.report.clicked.connect(self.report_update)
 
-        '''# 设置打开页面即进行案例下载显示
-        self.case_download_show.clear()
-        openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
-        self.case_download_show.addItems(openx_case)'''
-
         # 设置打开页面即进行测试报告显示
         self.report_show.clear()
         report = os.listdir(default_file.DEFAULT_REPORT_DIR)
         self.report_show.addItems(report)
-
-        '''# 设置打开页面即进行测试里程显示
-        self.range_show.clear()
-        range_dis = os.listdir(default_file.DEFAULT_RANGE_DIR)
-        self.range_show.addItems(range_dis)'''
 
     def show_vtd(self):
         self.vtd_window = App_vtd.vtd_change()
@@ -69,8 +59,9 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         self.prescan_window.show()
 
     def test_range_stat(self):
-        trs_dir = os.path.abspath(os.path.dirname(os.getcwd())) + "\\log"
-
+        # trs_dir = os.path.abspath(os.path.dirname(os.getcwd())) + "\\log"
+        log_path = []
+        log_dir = default_file.DEFAULT_LOG_DIR # 'E:\RLearning\VTD\OpenX_V8.4.2\OpenX_FileChange\log_path.txt'
         # 新建文件存储数据
         if not os.path.exists(default_file.DEFAULT_TRS_SOFT_DIR):
             trs_make = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
@@ -80,108 +71,169 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
             trs_check = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='w')
             trs_check.close()
 
-        # 对文件夹内文件进行遍历
-        range_log = os.listdir(trs_dir)
-        done_file = []
-        # print(range_log)
-        for log in range_log:
-            portion = os.path.splitext(log)
-            done_file = []
-            done_sta = 0
-            # 后缀为.log文件时进行遍历
-            if 'log' in portion[1]:
-                # 验证是否遍历过该文件
-                done_check = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='r')
-                for check in open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='r'):
-                    if log in check:
-                        done_sta = 1
-                done_check.close()
+        if os.path.exists(log_dir):
+            path_read = open(log_dir, mode='r')
+            for lane in open(log_dir, mode='r'):
+                lane_write = lane.replace('\n', '')
+                lane_write = lane_write.replace(' ', '')
+                log_path.append(lane_write)
+            path_read.close()
+        else:
+            print('路径文件不存在')
+            # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, '未导出carmaker')
 
-                if done_sta == 0:
+        if not log_path == []:
+            for file_dir in log_path:
+                if os.path.exists(file_dir):
+                    print(file_dir)
+                    # 对文件夹内文件进行遍历
+                    range_log = os.listdir(file_dir)
+                    # done_file = []
+                    # print(range_log)
+                    for log in range_log:
+                        portion = os.path.splitext(log)
+                        done_file = []
+                        done_sta = 0
+                        # 后缀为.log文件时进行遍历
+                        if 'log' in portion[1]:
+                            # 验证是否遍历过该文件
+                            done_check = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='r')
+                            for check in open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='r'):
+                                if log in check:
+                                    done_sta = 1
+                            done_check.close()
 
-                    # 将当前遍历文件的文件名写入已遍历文件存储
-                    done_file.append(log)
-                    done_write = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='a')
-                    for done in done_file:
-                        done_write.write(done + '\n')
-                    done_write.close()
+                            if done_sta == 0:
 
-                    # 读取场景名称以及测试距离
-                    trs_read = open(trs_dir + '\\' + log, mode='r')
-                    for line in open(trs_dir + '\\' + log, mode='r'):
-                        if 'SIM_END' in line:
-                            # sim_range = line.replace('SIM_END', '')
-                            sim_range = []
-                            line_m = 0
-                            line_s = 0
-                            line_na0 = 0
-                            line_na1 = 0
-                            text_len = len(line) - 1
-                            print(line)
-                            for i in range(text_len, -1, -1):
-                                if 'm' in line[i]:
-                                    if line_m == 0:
-                                        line_m = i
+                                # 将当前遍历文件的文件名写入已遍历文件存储
+                                done_file.append(log)
+                                done_write = open(default_file.DEFAULT_TRS_CHECK_SOFT_DIR, mode='a')
+                                for done in done_file:
+                                    done_write.write(done + '\n')
+                                done_write.close()
 
-                                if 's' in line[i]:
-                                    if line_s == 0:
-                                        line_s = i
+                                # 读取场景名称以及测试距离
+                                trs_read = open(file_dir + '\\' + log, mode='r')
+                                for line in open(file_dir + '\\' + log, mode='r'):
+                                    if 'SIM_END' in line:
+                                        # sim_range = line.replace('SIM_END', '')
+                                        sim_range = []
+                                        line_m = 0
+                                        line_s = 0
+                                        line_na0 = 0
+                                        line_na1 = 0
+                                        text_len = len(line) - 1
+                                        # print(line)
+                                        for i in range(text_len, -1, -1):
+                                            if 'm' in line[i]:
+                                                if line_m == 0:
+                                                    line_m = i
 
-                                if '	' in line[i]:
-                                    if not line_na1 == 0:
-                                        if line_na0 == 0:
-                                            # print('blank0')
-                                            line_na0 = i
+                                            if 's' in line[i]:
+                                                if line_s == 0:
+                                                    line_s = i
 
-                                if '	' in line[i]:
-                                    # print('blank')
-                                    if not line_s == 0:
-                                        if line_na1 == 0:
-                                            # print('blank1')
-                                            line_na1 = i
+                                            if '	' in line[i]:
+                                                if not line_na1 == 0:
+                                                    if line_na0 == 0:
+                                                        # print('blank0')
+                                                        line_na0 = i
 
+                                            if '	' in line[i]:
+                                                # print('blank')
+                                                if not line_s == 0:
+                                                    if line_na1 == 0:
+                                                        # print('blank1')
+                                                        line_na1 = i
 
+                                        # sim_range.append(line[i])
+                                        sim_range_mid = line[line_s + 2:line_m]
+                                        sim_range = sim_range_mid.replace('	', '')
+                                        sim_range = float(sim_range)
+                                        # print(sim_range)
 
-                            # sim_range.append(line[i])
-                            sim_range_mid = line[line_s+2:line_m]
-                            sim_range = sim_range_mid.replace('	', '')
-                            sim_range = float(sim_range)
-                            # print(sim_range)
+                                        sim_name = line[line_na0:line_na1]
+                                        sim_name = sim_name.replace('	', '')
+                                        # print(sim_name)
 
-                            sim_name = line[line_na0:line_na1]
-                            sim_name = sim_name.replace('	', '')
-                            # print(sim_name)
+                                        # 若距离不为0 且场景名称不为空则写入数据
+                                        if not sim_range == 0:
+                                            if ' ' not in sim_name:
+                                                openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
+                                                if sim_name in openx_case:
 
-                            # 若距离不为0 且场景名称不为空则写入数据
-                            if not sim_range == 0:
-                                if ' ' not in sim_name:
-                                    openx_case = os.listdir(default_file.DEFAULT_CASE_DIR)
-                                    if sim_name in openx_case:
+                                                    # 总里程统计
+                                                    total_temp = []
+                                                    trs_total_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+                                                    for tol_ran in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+                                                        if '总里程' in tol_ran:
+                                                            total_range = tol_ran.replace('测试总里程：', '')
+                                                            total_range = total_range.replace('m', '')
+                                                            total_range = total_range.replace(' ', '')
+                                                            total_range = total_range.replace('\n', '')
+                                                            cont_total = float(total_range)
+                                                            new_total = cont_total + sim_range
+                                                            total_temp.append('测试总里程： ' + str(new_total) + 'm \n')
+                                                            line = next(trs_total_read)
+                                                        else:
+                                                            total_temp.append(trs_total_read.readline())
+                                                    trs_total_read.close()
 
-                                        # 总里程统计
-                                        total_temp = []
-                                        trs_total_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
-                                        for tol_ran in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
-                                            if '总里程' in tol_ran:
-                                                total_range = tol_ran.replace('测试总里程：', '')
-                                                total_range = total_range.replace('m', '')
-                                                total_range = total_range.replace(' ', '')
-                                                total_range = total_range.replace('\n', '')
-                                                cont_total = float(total_range)
-                                                new_total = cont_total + sim_range
-                                                total_temp.append('测试总里程： ' + str(new_total) + 'm \n')
-                                                line = next(trs_total_read)
-                                            else:
-                                                total_temp.append(trs_total_read.readline())
-                                        trs_total_read.close()
+                                                    trs_total_write = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
+                                                    for total in total_temp:
+                                                        trs_total_write.writelines(total)
+                                                    trs_total_write.close()
 
-                                        trs_total_write = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
-                                        for total in total_temp:
-                                            trs_total_write.writelines(total)
-                                        trs_total_write.close()
+                                                    # 写入各场景测试距离
+                                                    check_sta = 0
+                                                    trs_check = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+                                                    for sim in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+                                                        if sim_name in sim:
+                                                            check_sta = 1
+                                                    trs_check.close()
 
-                    trs_read.close()
-                    # name_ck = line[0:j]
+                                                    # 若该场景未存储于数据文件内，则新建行写入数据
+                                                    if check_sta == 0:
+                                                        print(sim_range)
+                                                        print(sim_name)
+                                                        trs_write = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='a')
+                                                        trs_write.write(sim_name + ' 测试里程：' + str(sim_range) + 'm \n')
+                                                        trs_write.close()
+
+                                                    # 若该场景已经存在于数据文件内，则对测试里程进行相加处理
+                                                    if check_sta == 1:
+                                                        # 单场景里程统计
+                                                        trs_com = []
+                                                        trs_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+                                                        for case in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+                                                            if sim_name in case:
+                                                                print("find!")
+                                                                case_range = case.replace(sim_name, '')
+                                                                case_range = case_range.replace(' 测试里程：', '')
+                                                                case_range = case_range.replace('\n', '')
+                                                                case_range = case_range.replace(' ', '')
+                                                                case_range = case_range.replace('m', '')
+                                                                cont_range = float(case_range)
+                                                                cont_range = cont_range + sim_range
+                                                                trs_com.append(
+                                                                    sim_name + ' 测试里程：' + str(cont_range) + 'm \n')
+                                                                line = next(trs_read)
+                                                                # print(dwc_com)
+                                                            else:
+                                                                trs_com.append(trs_read.readline())
+                                                        trs_read.close()
+
+                                                        trs_sum = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
+                                                        trs_sum.truncate()
+                                                        for comp in trs_com:
+                                                            trs_sum.writelines(comp)
+                                                        trs_sum.close()
+
+                                trs_read.close()
+                                # name_ck = line[0:j]
+                else:
+                    msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
+                                                      '当前Log文件路径不存在：\n' + file_dir)
 
         # 调用数据到显示框
         trs_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
