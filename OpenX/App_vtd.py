@@ -251,7 +251,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
                             # print("error")
                             # print(vtd_change.vtd_input_dir)
                             # msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,default_file.DISPLAY_WARN_INPUT_FORMAT + vtd_change.vtd_input_dir)
-                            file_ic.append(stri.join(vtd_change.vtd_inputs) + '/' + name)
+                            vtd_change.file_ic.append(stri.join(vtd_change.vtd_inputs) + '/' + name)
                             # print('3')
                             # print(file_ic)
                         sta = 0
