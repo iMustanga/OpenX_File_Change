@@ -430,8 +430,6 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         self.vtd_show_output.setText(stri.join(vtd_change.vtd_outputs))
 
 
-
-
     # 获取输入文件路径
     def vtd_input_file(self):
         self.vtd_input.setEnabled(False)
@@ -469,7 +467,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
             self.select_dir = SelectDir(files, directory, self)
             self.select_dir.show()
 
-    # def vtd_select_input_dir(self):
+    '''# def vtd_select_input_dir(self):
     #     self.vtd_input.setEnabled(False)
     #     self.vtd_input_4.setEnabled(False)
     #
@@ -479,7 +477,7 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
     #     self.vtd_show_input.setText(dir_name)
     #
     #     self.vtd_input.setEnabled(True)
-    #     self.vtd_input_4.setEnabled(True)
+    #     self.vtd_input_4.setEnabled(True)'''
 
     # 获取输出文件夹路径
     def vtd_output_file(self):
@@ -587,7 +585,9 @@ class vtd_change(QtWidgets.QWidget, Ui_Window_vtd):
         vtd_readme_file.write('1.需要在车辆设置界面将车辆主体名称命名为ego，车辆型号名称可以不作修改 \n \n')
         vtd_readme_file.write(
             '2.加速场景的加速方式都可以选择，减速模式不可以选择加速度方式，其余时间或是长度方式都可以，但模式必须选择为线性“Liner”，其余模式VTD无法识别 \n \n')
-        vtd_readme_file.write('3.roadrunner动作中目前只能够导入变道、变速两个动作 \n \n')
+        vtd_readme_file.write(
+            '3.变道动作的模式必须选择为线性“Liner”，其余模式VTD无法识别 \n \n')
+        vtd_readme_file.write('4.roadrunner动作中目前只能够导入变道、变速两个动作 \n \n')
         vtd_readme_file.write('二、软件操作 \n')
         vtd_readme_file.write(
             "1.软件使用：首先点击‘选择xosc文件’按钮，选取需要更改格式的xosc文件；随后点击‘选择打包后输出目录’按钮，选择更改后xosc文件需要保存的位置；最后点击'转换为VTD格式'按钮即可。 \n \n")
