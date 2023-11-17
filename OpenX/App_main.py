@@ -37,6 +37,7 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         # self.range.clicked.connect(self.range_update)test_range_stat
         self.range.clicked.connect(self.test_range_stat)
         self.test_range_stat()
+        self.range_zero.clicked.connect(self.test_range_zero)
 
         # 测试报告获取
         self.report.clicked.connect(self.report_update)
@@ -234,6 +235,55 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
                 else:
                     msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN,
                                                       '当前Log文件路径不存在：\n' + file_dir)
+
+        # 调用数据到显示框
+        trs_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+        trs_info = []
+        for line in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+            line_info = line.replace('\n', '')
+            # line_name = line_info.replace(' 下载次数：', '')
+            # line_name = line_name.replace()
+            trs_info.append(line_info)
+        trs_read.close()
+        # print(dwc_info)
+        self.range_show.clear()
+        self.range_show.addItems(trs_info)
+
+
+    def test_range_zero(self):
+        total_temp = []
+
+        keep_temp = []
+        trs_keep_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+        for line in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+            keep_temp.append(trs_keep_read.readline())
+        trs_keep_read.close()
+        trs_keep_write = open(default_file.DEFAULT_TRS_OLD_SOFT_DIR, mode='w')
+        for keep in keep_temp:
+            trs_keep_write.writelines(keep)
+        trs_keep_write.close()
+
+
+
+        trs_total_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')
+        for tol_ran in open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r'):
+            if '总里程' in tol_ran:
+                '''total_range = tol_ran.replace('测试总里程：', '')
+                total_range = total_range.replace('m', '')
+                total_range = total_range.replace(' ', '')
+                total_range = total_range.replace('\n', '')
+                cont_total = float(total_range)
+                new_total = cont_total + sim_range'''
+                total_temp.append('测试总里程： ' + '0' + 'm \n')
+                line = next(trs_total_read)
+            else:
+                total_temp.append(trs_total_read.readline())
+        trs_total_read.close()
+
+        trs_total_write = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='w')
+        for total in total_temp:
+            trs_total_write.writelines(total)
+        trs_total_write.close()
 
         # 调用数据到显示框
         trs_read = open(default_file.DEFAULT_TRS_SOFT_DIR, mode='r')

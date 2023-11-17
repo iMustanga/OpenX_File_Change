@@ -33,6 +33,7 @@ DEFAULT_ROADRUNNER_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\
 DEFAULT_DWC_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\DWC.txt"
 DEFAULT_LOG_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\dir_path.txt"
 DEFAULT_TRS_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS.txt"
+DEFAULT_TRS_OLD_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS_old.txt"
 DEFAULT_TRS_CHECK_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS_Check.txt"
 '''
 
