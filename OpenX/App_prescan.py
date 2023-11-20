@@ -17,7 +17,8 @@ class SelectDir(QWidget):
         super().__init__()
         self.directory = directory
         self.files = files
-        # self.dir_list = []
+
+        self.interact = interact
 
         self.setWindowTitle('请勾选包含xosc文件的文件夹')
         self.setGeometry(200, 200, 500, 600)
@@ -96,7 +97,6 @@ class SelectDir(QWidget):
 
     def confirm(self, interact):
         file_fir1 = []
-        print("dir_list: %s" % dir_list)
         num1 = len(dir_list)
 
         if num1 == 0:
@@ -117,9 +117,15 @@ class SelectDir(QWidget):
 
             interact.prescan_show_input.setText(str(file_fir))
             self.close()
-            # interact.prescan_select_input_dir.setEnabled(True)
 
-        # interact.ui.select_input_dir.setEnabled(True)
+            VALID.append(2)
+
+    def closeEvent(self, event):
+        super().closeEvent(event)
+        if hasattr(self.interact, 'prescan_select_input_dir'):
+            self.interact.prescan_select_input_dir.setEnabled(True)
+        else:
+            print("未找到 'prescan_select_input_dir' 按钮")
 
     def filterFiles(self):
         search_text = self.search_input.text().lower()
@@ -132,17 +138,20 @@ class SelectDir(QWidget):
 class presc_change(QtWidgets.QWidget, Ui_window_prescan):
 
     def __init__(self):
-        print("---------------分割线----------------")
         super(presc_change, self).__init__()
         self.setupUi(self)
 
         self.prescan_select_input.clicked.connect(self.input_file)
         self.prescan_select_output.clicked.connect(self.prescan_input)
         self.prescan_select_input_dir.clicked.connect(self.input_dir)
-        # self.new_file_name.textEdited.connect(new_name)
         self.to_prescan.clicked.connect(self.prescan_change)
-        print("---------------分割线----------------")
-        print("验证鼠标点击选择路径、目标安装目录，键盘输入新文件名称：")
+
+        # 2023.11.6 每次打开Prescan的窗口都会清除掉跟转换有关的列表
+        dir_list.clear()
+        files.clear()
+        prescan_inputs.clear()
+        VALID.clear()
+        inputs.clear()
 
     def input_file(self):
         self.prescan_select_input.setEnabled(False)
@@ -153,14 +162,13 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         inputs.clear()
         VALID.clear()
 
+        self.prescan_show_input.clear()
+
         inputs.append(fileName)
-        print("filename: %s" % fileName)
-        print("inputs: %s" % inputs)
 
         # 2023.10.17 添加文件多选功能
         # 判断选取的文件数量
         self.num = np.size(inputs)
-        print("选择的文件个数为：%s" % self.num)
         if self.num > 1:
             out_name = []
             out_name = fileName[0]
@@ -174,7 +182,6 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         # 2023.10.19 使用os.path.isfile功能识别多选文件功能
         if os.path.isfile(fileName[0]):
             VALID.append(1)
-        print("VALID: %s" % VALID)
 
         self.prescan_select_input.setEnabled(True)
 
@@ -188,31 +195,28 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         VALID.clear()
         dir_list.clear()
 
+        self.prescan_show_input.clear()
+
         if self.dir_name:
             # 2023.11.1 实现勾选文件夹功能，使用二级弹窗
             self.files = [f for f in os.listdir(self.dir_name) if os.path.isdir(os.path.join(self.dir_name, f))]
             self.select_dir = SelectDir(self.files, self.dir_name, self)
             self.select_dir.show()
 
-            print("dirname: %s" % self.dir_name)
-            print("files: %s" % self.files)
-
-            # 2023.10.19 使用os.path.isdir识别文件夹选择功能
-            if os.path.isdir(self.dir_name):
-                VALID.append(2)
-            print("VALID: %s" % VALID)
-
-        self.prescan_select_input_dir.setEnabled(True)
+        elif not self.dir_name:
+            self.prescan_select_input_dir.setEnabled(True)
 
     def prescan_input(self):
         self.prescan_select_output.setEnabled(False)
 
         directory = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择prescan文件夹路径",
                                                                "D:/PreScan/Experiment_place/import_actions/python_test")
+
+        self.prescan_show_output.clear()
+
         prescan_inputs.clear()
         prescan_inputs.append(directory)
         self.prescan_show_output.setText(directory)
-        print("prescan_inputs: %s" % prescan_inputs)
 
         self.prescan_select_output.setEnabled(True)
 
@@ -221,52 +225,19 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示',
                                           '修改成功')
 
-    def prescan_readme(self):
-        with open(prescan_inputs[0] + '/' + 'Prescan_Readme.txt', mode='w') as prescan_readme_file:
-            prescan_readme_file.write('一、请按操作文档的要求在RoadRunner中构建OpenScenario场景并导出。\n \n')
-            prescan_readme_file.write('二、运行RoadRunner-Prescan场景转换软件完成指定xosc文件的转换后，需要使用MATLAB脚本导入Prescan。导入方法如下：\n \n')
-            prescan_readme_file.write('1.首先确保本机中含有Simcenter Prescan 2206软件；\n')
-            prescan_readme_file.write('2.在软件Experiment目录下新建文件路径，自定义命名，命名规则与其他文件夹相同。\n')
-            prescan_readme_file.write('3.使用Prescan Process Manager 2206控制台打开MATLAB，新建脚本文件，自定义文件名称并保存脚本文件至步骤2中创建的文件夹中。\n')
-            prescan_readme_file.write('4.在脚本文件中键入一下命令：\n \n')
-            prescan_readme_file.write('\t' + 'experiment = prescan.api.experiment.createExperiment(); % 创建实验\n \n')
-            prescan_readme_file.write('\t' + 'prescan.api.openscenario.importOpenScenarioFile(experiment, ''); % 导入OpenScenario文件，''内填入修改后的xosc文件路径 \n \n')
-            prescan_readme_file.write('\t' + 'experiment.scheduler.simulationSpeed = prescan.api.types.SimulationSpeed.WallClockSpeed; '
-                                      '% 让项目以墙上时钟速度运行\n \n')
-            prescan_readme_file.write('\t' + 'myViewer = prescan.api.viewer.createViewer(experiment); % 添加Prescan Viewer \n '
-                                      '\t' + 'myViewer.windowSettings.windowDecoration = true; \n \n')
-            prescan_readme_file.write('\t' + 'experiment.saveToFile(''); % 保存，''内填入pb文件名，格式为XX.pb\n \n')
-            prescan_readme_file.write('\t' + 'prescan.api.simulink.generate(); % 创建cs\n \n')
-            prescan_readme_file.write('三、若有添加传感器的需要，可以在脚本文件中添加一下命令： \n \n')
-            prescan_readme_file.write('\t' + 'for i = 1:numel(experiment.objects) \n ')
-            prescan_readme_file.write('\t' + '\t' + 'prescan.api.pcs.createPcsSensor(experiment.objects(i)); % 以导入Point Cloud Sensor为例\n \n')
-            prescan_readme_file.write('四、若需要配置传感器参数，如配置Point Cloud Sensor的分辨率，可以进行如下操作：\n \n')
-            prescan_readme_file.write('1.首先创建一个对象，如pcsensor：\n')
-            prescan_readme_file.write('\t' + 'pcsensor = prescan.api.pcs.createPcsSensor(experiment.objects(i));\n \n')
-            prescan_readme_file.write('2.然后赋值修改分辨率：\n')
-            prescan_readme_file.write('\t' + 'pcsensor.resolutionX = 630;\n')
-            prescan_readme_file.write('\t' + 'pcsensor.resolutionY = 125;\n')
-
     # 2023.10.17 封装获取主修改程序输入路径的代码
     def get_input_parameters_1(self, inputs):# 2023.10.17 给成员方法一个输入
         self.str1 = '/'
         self.input_dir_and_file = inputs
         self.input_dir, self.input_file1 = os.path.split(self.input_dir_and_file)  # 将文件划分为路径和文件名
-        print("input_dir_and_file = %s" % self.input_dir_and_file)
-        print("input_dir = %s" % self.input_dir)
-        print("input_file1 = %s" % self.input_file1)
 
         self.old_file_name, _ = os.path.splitext(self.input_file1)  # 将文件名划分为文件名称和文件拓展名，拓展名用不到
-        print("old_file_name = %s" % self.old_file_name)
 
         self.output_dir = prescan_inputs[0]
-        print("output_dir = %s" % self.output_dir)
 
         self.input_file = self.input_dir + self.str1 + self.old_file_name + '.xosc'
-        print("input_file = %s" % self.input_file)
 
         self.output_file = self.output_dir + self.str1 + self.old_file_name + '.xosc' # 2023.10.17 取消新文件名功能，用旧文件名替代
-        print("output_file = %s" % self.output_file)
 
     def prescan_change(self):
         if not VALID: # 没有点击选择文件或文件夹按钮，或者点了按钮但又点了取消，这两种情况下VALID列表均为空，都会提示如下内容
@@ -276,35 +247,47 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择文件或文件夹')
 
         elif VALID[0] == 1: # 如果VALID列表含有元素1，则进入文件多选对应的修改程序
-            print("进行了文件的多选")
             self.size = np.size(inputs)  # 2023.10.17 改成使用首文件的拓展名作为判断依据
-            print("size: %s" % self.size)
 
             if not prescan_inputs or all(element == '' for element in prescan_inputs):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择目标路径')
             else:
                 if self.size > 1:
-                    print("多文件场景")
+
+                    self.c = 0
+                    error_file_list1 = []
+
                     for i in range(self.size):
                         self.get_input_parameters_1(str(inputs[0][i]))
                         roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
                                                                                               self.output_file)
-                        roadRunner_to_prescan.prescan_tranform()
-                    print("No Bug!! Enjoy.")
-                    self.prescan_readme()
-                    self.show_result()
+                        self.result = roadRunner_to_prescan.prescan_tranform()
+                        if self.result == 1:
+                            self.c += 1
+                            error_file_list1.append(self.input_file1)
+                    if self.c != 0:
+                        if len(error_file_list1) == 1:
+                            with open(prescan_inputs[0] + '/' + '文件本身存在错误.txt', mode='w') as f:
+                                f.write('以下文件存在错误，修改不成功：\n' + error_file_list1[0])
+                        else:
+                            self.error_file_string = '\n'.join(error_file_list1)
+                            with open(prescan_inputs[0] + '/' + '文件本身存在错误.txt', mode='w') as f:
+                                f.write('以下文件存在错误，修改不成功：\n' + self.error_file_string)
+                        msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告', '修改出错')
+                    else:
+
+                        self.show_result()
                 else:
-                    print("单文件场景")
                     self.get_input_parameters_1(str(inputs[0][0]))
                     roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
                                                                                       self.output_file)
-                    roadRunner_to_prescan.prescan_tranform()
-                    print("No Bug!! Enjoy.")
-                    self.prescan_readme()
-                    self.show_result()
+                    self.result = roadRunner_to_prescan.prescan_tranform()
+                    if self.result == 1:
+                        msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告', '修改错误！因为所选择的文件' + self.input_file1 + '本身存在错误。')
+                    else:
+                        self.show_result()
 
         elif VALID[0] == 2: # 如果VALID列表元素值为2，则进行文件夹修改功能，会识别文件夹内的xosc文件并修改，与此同时弹窗提示所有非xosc文件
-            print("选择了文件夹")
 
             not_xosc_list2 = []
             new_file_name_exist_list = []
@@ -313,13 +296,13 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                 msg_box = QMessageBox.information(QtWidgets.QWidget(), '提示', '请先选择目标路径')
             else:
                 len1 = len(dir_list)
+
+                self.e = len1
+
                 for i in range(len1):
                     file_list = os.listdir(dir_list[i])
                     new_file_name = os.path.basename(dir_list[i])  # 获得所选文件夹的文件夹名，作为新文件夹的文件夹名
-                    print("所选文件夹里的文件列表： %s" % file_list)
-                    print("新文件夹名： %s" % new_file_name)
                     new_file = prescan_inputs[0] + '/' + new_file_name  # 得到新文件夹路径
-                    print("新文件夹路径：%s" % new_file)
 
                     # 2023.10.25 添加功能：先判断目标路径是否有同名文件夹，是则弹窗警告，否则创建文件夹
                     # 2023.11.3 完善在多选文件夹时识别到有同名文件夹时的提示功能
@@ -328,6 +311,10 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                         continue
                     else:
                         os.mkdir(new_file)  # 创建与所选文件夹同名的新文件夹
+
+                        self.d = 0
+                        error_file_list2 = []
+
                         for file_name in file_list:  # 遍历所选文件夹
                             file_name1, expand_name = os.path.splitext(file_name)
                             if expand_name != '.xosc':
@@ -338,32 +325,43 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                                 self.output_file = new_file + '/' + file_name1 + '.xosc'
                                 roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
                                                                                                   self.output_file)
-                                roadRunner_to_prescan.prescan_tranform()
+                                self.result = roadRunner_to_prescan.prescan_tranform()
+                                if self.result == 1:
+                                    self.d += 1
+                                    error_file_list2.append(file_name)
 
-                        if not os.path.exists('RoadRunner导出的xosc文件导入Prescan的操作方法.txt'):
-                            self.prescan_readme()
-                        # copy('Prescan格式转换工具使用指南.pdf', prescan_inputs[0])
+                        if self.d != 0:
+                            if len(error_file_list2) == 1:
+                                with open(new_file + '/' + '文件本身存在错误.txt', mode='w') as f:
+                                    f.write('以下文件存在错误，修改不成功：\n' + error_file_list2[0])
+                            else:
+                                self.error_file_string2 = '\n'.join(error_file_list2)
+                                with open(new_file + '/' + '文件本身存在错误.txt', mode='w') as f:
+                                    f.write('以下文件存在错误，修改不成功：\n' + self.error_file_string2)
+                            self.e -= 1
 
-                        print("非xosc文件列表： %s" % not_xosc_list2)
                         num_list = len(file_list)
-                        print("文件夹中含有的文件数量：%s" % num_list)
                         num_not_xosc_list2 = len(not_xosc_list2)
-                        print("文件夹中含有的非xosc文件数量：%s" % num_not_xosc_list2)
 
                         if not_xosc_list2:
                             self.file_string2 = '\n'.join(not_xosc_list2)
                             # 2023.10.25 创建文本文件，将弹窗信息写入其中，看与否决定权交回给用户
-                            with open(new_file + '/' + 'readme.txt', mode='w') as f:
+                            with open(new_file + '/' + '存在非xosc导致的错误.txt', mode='w') as f:
                                 f.write('以下文件不是xosc文件，无法修改：\n' + self.file_string2)
                         else:
-                            with open(new_file + '/' + 'readme.txt', mode='w') as f:
-                                f.write('在所选文件夹' + self.dir_name + '中，总共包含' + str(
-                                    num_list) + '个文件，全部文件均以修改为Prescan可用的格式。')
+                            if not os.path.isdir(new_file + '/' + '文件本身存在错误.txt'):
+                                pass
+                            else:
+                                with open(new_file + '/' + '存在非xosc文件导致的错误.txt', mode='w') as f:
+                                    f.write('在所选文件夹' + self.dir_name + '中，总共包含' + str(num_list) + '个文件，全部文件均以修改为Prescan可用的格式。')
 
                 # 2023.11.3 完善在多选文件夹时识别到有同名文件夹时的提示功能
                 len2 = len(new_file_name_exist_list)
                 if len2 == 0:
-                    self.show_result()
+                    if self.e == len1:
+                        self.show_result()
+                    else:
+                        msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告', '修改出错')
                 elif len2 == 1:
                     msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告',
                                                   '想要创建的名为' + new_file_name_exist_list[
