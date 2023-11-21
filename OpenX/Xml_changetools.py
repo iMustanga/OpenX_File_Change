@@ -5,6 +5,8 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\CarMaker_PythonAPI\\python3.8")
 import cmapi
 import pathlib
+from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
 def change(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     # 手动输入文件名
     xosc_name = file_name+'.xosc'
@@ -207,7 +209,13 @@ def change(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     try:
         subprocess.run(cmd_command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
-        print("命令执行出错：", e)
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText("发生异常!")
+        msg.setInformativeText(f"CarMaker Converter未运行")
+        msg.setWindowTitle("错误提示")
+        msg.exec_()
+        return
 #以下作用为修改testrun文件中的Traffic.0.Man.n.LatStep.0.Limit参数，这样有lateral offset动作时直接转换不会报错
     with open(testrun_file,'r+') as testrun:
         testrun_contents=testrun.readlines()
