@@ -5,6 +5,8 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + "\\CarMaker_PythonAPI\\python3.8")
 import cmapi
 import pathlib
+from PyQt5.QtWidgets import *
+from PyQt5 import QtWidgets
 def dur(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     xosc_name = file_name+'.xosc'
     # 构建文件路径
@@ -239,7 +241,13 @@ def dur(file_name, cm_vehicle_model, input_dir, output_dir, cmaker_dir):
     try:
         subprocess.run(cmd_command, shell=True, check=True)
     except subprocess.CalledProcessError as e:
-        print("命令执行出错：", e)
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Warning)
+        msg.setText("发生异常!")
+        msg.setInformativeText(f"CarMaker Converter未运行")
+        msg.setWindowTitle("错误提示")
+        msg.exec_()
+        return
     with open(testrun_file,'r+') as testrun:
         testrun_contents=testrun.readlines()
         for i, line in enumerate(testrun_contents):
