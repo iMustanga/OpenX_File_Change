@@ -15,6 +15,7 @@ from threading import Thread
 
 class window_main(QtWidgets.QWidget, Ui_MainWindow):
     soft_path = []
+    report_dir = []
     def __init__(self):
         super(window_main, self).__init__()
         self.setupUi(self)
@@ -40,12 +41,13 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
         self.range_zero.clicked.connect(self.test_range_zero)
 
         # 测试报告获取
-        self.report.clicked.connect(self.report_update)
+        # self.report.clicked.connect(self.report_update)
+        self.report.clicked.connect(self.test_report_get)
 
-        # 设置打开页面即进行测试报告显示
+        '''# 设置打开页面即进行测试报告显示
         self.report_show.clear()
         report = os.listdir(default_file.DEFAULT_REPORT_DIR)
-        self.report_show.addItems(report)
+        self.report_show.addItems(report)'''
 
     def show_vtd(self):
         self.vtd_window = App_vtd.vtd_change()
@@ -58,6 +60,54 @@ class window_main(QtWidgets.QWidget, Ui_MainWindow):
     def show_prescan(self):
         self.prescan_window = App_prescan.presc_change()
         self.prescan_window.show()
+
+    def test_report_get(self):
+        stri = '\n'
+        # report_dir = window_main.report_dir  # os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange"
+        if window_main.report_dir == []:
+            print('[]')
+            self.test_report_dir()
+        if not os.path.exists(stri.join(window_main.report_dir)):
+            print('no exist')
+            self.test_report_dir()
+
+        if os.path.exists(stri.join(window_main.report_dir)):
+            report_case = os.listdir(stri.join(window_main.report_dir))
+            if os.path.exists(default_file.DEFAULT_TEST_REPORT_DIR):
+                os.remove(default_file.DEFAULT_TEST_REPORT_DIR)
+                trg_check = open(default_file.DEFAULT_TEST_REPORT_DIR, mode='w')
+                trg_check.close()
+            else:
+                trg_check = open(default_file.DEFAULT_TEST_REPORT_DIR, mode='w')
+                trg_check.close()
+
+            trg_write = open(default_file.DEFAULT_TEST_REPORT_DIR, mode='w')
+            for case in report_case:
+                trg_write.writelines(case + '\n')
+            trg_write.close()
+
+            # 调用数据到显示框
+            trg_read = open(default_file.DEFAULT_TEST_REPORT_DIR, mode='r')
+            trg_info = []
+            for line in open(default_file.DEFAULT_TEST_REPORT_DIR, mode='r'):
+                line_info = line.replace('\n', '')
+                trg_info.append(line_info)
+            trg_read.close()
+
+            self.report_show.clear()
+            self.report_show.addItems(trg_info)
+            os.startfile(stri.join(window_main.report_dir))
+        else:
+            msg_box = QMessageBox.information(QtWidgets.QWidget(), default_file.DISPLAY_WARN, '测试报告路径不存在！')
+
+        # dir_path = QFileDialog.getExistingDirectory(self, '打开文件夹', str(window_main.report_dir))
+
+    def test_report_dir(self):
+        dir_name = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择文件夹路径", default_file.DEFAULT_INPUT_DATABASE)
+        window_main.report_dir.clear()
+        window_main.report_dir.append(dir_name)
+
+
 
     def test_range_stat(self):
         # trs_dir = os.path.abspath(os.path.dirname(os.getcwd())) + "\\log"
