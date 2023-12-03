@@ -6,12 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1119</width>
+    <width>1131</width>
     <height>735</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>CarMaker</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="DSXW.qrc">
+    <normaloff>:/DSXW/DSXW.png</normaloff>:/DSXW/DSXW.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="3">
@@ -783,6 +790,8 @@ border-radius:10px;
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="DSXW.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -9,13 +9,19 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+import ctypes
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1195, 822)
+        MainWindow.resize(1195, 855)
         MainWindow.setMaximumSize(QtCore.QSize(1666665, 166666))
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/DSXW/DSXW.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        MainWindow.setWindowIcon(icon)
+        # MainWindow.setWindowIcon(QIcon(':/DSXW/DSXW.ico'))
         self.gridLayout_2 = QtWidgets.QGridLayout(MainWindow)
         self.gridLayout_2.setObjectName("gridLayout_2")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)

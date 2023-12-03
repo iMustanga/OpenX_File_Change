@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Prescan</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="DSXW.qrc">
+    <normaloff>:/DSXW/DSXW.png</normaloff>:/DSXW/DSXW.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="3">
     <spacer name="horizontalSpacer_9">
@@ -961,6 +965,8 @@ border-radius:10px;
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="DSXW.qrc"/>
+ </resources>
  <connections/>
 </ui>

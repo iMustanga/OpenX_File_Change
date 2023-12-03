@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1195</width>
-    <height>822</height>
+    <height>855</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -18,6 +18,10 @@
   </property>
   <property name="windowTitle">
    <string>OpenX</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="DSXW.qrc">
+    <normaloff>:/DSXW/DSXW.png</normaloff>:/DSXW/DSXW.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="2" colspan="2">

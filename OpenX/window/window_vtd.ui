@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>VTD</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="DSXW.qrc">
+    <normaloff>:/DSXW/DSXW.png</normaloff>:/DSXW/DSXW.png</iconset>
+  </property>
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>

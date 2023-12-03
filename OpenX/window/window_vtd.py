@@ -9,12 +9,16 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import ctypes
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
 class Ui_Window_vtd(object):
     def setupUi(self, Window_vtd):
         Window_vtd.setObjectName("Window_vtd")
         Window_vtd.resize(1133, 937)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/DSXW/DSXW.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        Window_vtd.setWindowIcon(icon)
         Window_vtd.setAutoFillBackground(False)
         Window_vtd.setStyleSheet("background-color: rgb(243, 243, 243);")
         self.gridLayout = QtWidgets.QGridLayout(Window_vtd)
@@ -378,7 +382,7 @@ class Ui_Window_vtd(object):
         self.vtd_vehicle_model_select_2.setText(_translate("Window_vtd", "VTD"))
         self.vtd_vehicle_model_select_3.setText(_translate("Window_vtd", "1.选择输入文件"))
         self.vtd_input.setText(_translate("Window_vtd", "选择xosc文件"))
-        self.vtd_input_4.setText(_translate("Window_vtd", "选择文件夹"))
+        self.vtd_input_4.setText(_translate("Window_vtd", "选择xosc文件夹"))
         self.vtd_vehicle_model_select_4.setText(_translate("Window_vtd", "2.选择车辆模型"))
         self.vtd_vehicle_model_select.setText(_translate("Window_vtd", "选择车辆模型"))
         self.vtd_vehicle_model_select_5.setText(_translate("Window_vtd", "3.选择传感器模型"))

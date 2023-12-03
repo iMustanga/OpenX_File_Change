@@ -9,12 +9,16 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import ctypes
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
 class Ui_window_prescan(object):
     def setupUi(self, window_prescan):
         window_prescan.setObjectName("window_prescan")
         window_prescan.resize(1133, 980)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/DSXW/DSXW.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        window_prescan.setWindowIcon(icon)
         self.gridLayout = QtWidgets.QGridLayout(window_prescan)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -386,3 +390,4 @@ class Ui_window_prescan(object):
         self.vtd_vehicle_model_select_6.setText(_translate("window_prescan", "4.选择输出目录"))
         self.prescan_select_output.setText(_translate("window_prescan", "输出到Prescan工程目录"))
         self.to_prescan.setText(_translate("window_prescan", "转换为Prescan格式"))
+from window import DSXW_rc

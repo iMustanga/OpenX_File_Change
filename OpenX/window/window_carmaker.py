@@ -9,12 +9,17 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import ctypes
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
 class Ui_window_carmaker(object):
     def setupUi(self, window_carmaker):
         window_carmaker.setObjectName("window_carmaker")
-        window_carmaker.resize(1119, 735)
+        window_carmaker.resize(1131, 735)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/DSXW/DSXW.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        window_carmaker.setWindowIcon(icon)
+        window_carmaker.setStyleSheet("")
         self.gridLayout = QtWidgets.QGridLayout(window_carmaker)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -315,3 +320,4 @@ class Ui_window_carmaker(object):
         self.vtd_vehicle_model_select_6.setText(_translate("window_carmaker", "3.选择输出目录"))
         self.carmaker_select_output.setText(_translate("window_carmaker", "输出到Carmaker工程目录"))
         self.to_carmaker.setText(_translate("window_carmaker", "转换为Carmaker格式（Windows）"))
+from window import DSXW_rc
