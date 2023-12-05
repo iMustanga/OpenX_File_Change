@@ -36,6 +36,8 @@ DEFAULT_TRS_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_
 DEFAULT_TRS_OLD_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS_old.txt"
 DEFAULT_TRS_CHECK_SOFT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\TRS_Check.txt"
 DEFAULT_TEST_REPORT_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\OpenX_FileChange\\REPORT.txt"
+# 11.21 增加prescan模型路径
+DEFAULT_PRESCAN_MODEL_DIR = os.path.abspath(os.path.dirname(os.getcwd())) + "\\Prescan_VehicleSensor"
 '''
 
 # linux

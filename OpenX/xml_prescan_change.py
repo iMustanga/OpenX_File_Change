@@ -1,9 +1,11 @@
 import xml.etree.ElementTree as ET
+import shutil, os
 
 class roadrunnner_to_prescan:
-    def __init__(self, input_file, output_file):
+    def __init__(self, input_file, output_file, model_file):
         self.old_file = input_file
         self.new_file = output_file
+        self.model_file = model_file
 
     def prescan_tranform(self):
         tree = ET.parse(self.old_file)
@@ -274,3 +276,13 @@ class roadrunnner_to_prescan:
         # 该情况不常出现，若出现，可自行修改对应Act下的SimulationTimeCondition标签中的value为需要的时间值
         # 写入
         tree.write(self.new_file)
+        # 获取self.model_file的文件夹名
+        model_file_dir = os.path.basename(self.model_file)
+        new_file_dir = os.path.join(os.path.dirname(self.new_file), model_file_dir)
+        # 将model_file文件夹下的所有文件复制到new_file文件夹下
+        if model_file_dir != "无":
+            if model_file_dir in os.listdir(os.path.dirname(self.new_file)):
+                pass
+            else:
+                shutil.copytree(self.model_file, new_file_dir)
+

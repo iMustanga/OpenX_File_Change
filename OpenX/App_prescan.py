@@ -145,6 +145,7 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         self.prescan_select_output.clicked.connect(self.prescan_input)
         self.prescan_select_input_dir.clicked.connect(self.input_dir)
         self.to_prescan.clicked.connect(self.prescan_change)
+        self.prescan_model_select.clicked.connect(self.model_update)
 
         # 2023.11.6 每次打开Prescan的窗口都会清除掉跟转换有关的列表
         dir_list.clear()
@@ -210,7 +211,7 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
         self.prescan_select_output.setEnabled(False)
 
         directory = QtWidgets.QFileDialog.getExistingDirectory(None, "请选择prescan文件夹路径",
-                                                               "D:/PreScan/Experiment_place/import_actions/python_test")
+                                                               default_file.DEFAULT_OUTPUT_DIR)
 
         self.prescan_show_output.clear()
 
@@ -259,8 +260,9 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
 
                     for i in range(self.size):
                         self.get_input_parameters_1(str(inputs[0][i]))
+                        model_file = os.path.join(default_file.DEFAULT_PRESCAN_MODEL_DIR, self.prescan_model_show.currentText())
                         roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                              self.output_file)
+                                                                                              self.output_file, model_file)
                         self.result = roadRunner_to_prescan.prescan_tranform()
                         if self.result == 1:
                             self.c += 1
@@ -279,8 +281,10 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                         self.show_result()
                 else:
                     self.get_input_parameters_1(str(inputs[0][0]))
+                    model_file = os.path.join(default_file.DEFAULT_PRESCAN_MODEL_DIR,
+                                              self.prescan_model_show.currentText())
                     roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                      self.output_file)
+                                                                                      self.output_file, model_file)
                     self.result = roadRunner_to_prescan.prescan_tranform()
                     if self.result == 1:
                         msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告', '修改错误！因为所选择的文件' + self.input_file1 + '本身存在错误。')
@@ -323,8 +327,11 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                             else:
                                 self.input_file = dir_list[i] + '/' + file_name1 + '.xosc'
                                 self.output_file = new_file + '/' + file_name1 + '.xosc'
+                                model_file = os.path.join(default_file.DEFAULT_PRESCAN_MODEL_DIR,
+                                                          self.prescan_model_show.currentText())
                                 roadRunner_to_prescan = xml_prescan_change.roadrunnner_to_prescan(self.input_file,
-                                                                                                  self.output_file)
+                                                                                                  self.output_file,
+                                                                                                  model_file)
                                 self.result = roadRunner_to_prescan.prescan_tranform()
                                 if self.result == 1:
                                     self.d += 1
@@ -370,6 +377,11 @@ class presc_change(QtWidgets.QWidget, Ui_window_prescan):
                     new_file_name_exist_list_string = ', '.join(new_file_name_exist_list)
                     msg_box = QMessageBox.warning(QtWidgets.QWidget(), '警告',
                                                   '想要创建的名为' + new_file_name_exist_list_string + '的文件夹已存在于该目标路径，请先删除路径中的同名文件夹。')
+
+    def model_update(self):
+        self.prescan_model_show.clear()
+        prescan_model = os.listdir(default_file.DEFAULT_PRESCAN_MODEL_DIR)
+        self.prescan_model_show.addItems(prescan_model)
 
 
 
